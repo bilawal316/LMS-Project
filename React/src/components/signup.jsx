@@ -9,8 +9,9 @@ function Signup(updateState) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
-
-    const SIGNUP = async () => {
+console.log(role)
+    const Signup = async (e) => {
+        e.preventDefault();
         console.log("firstName", firstName);
         console.log("lastName", lastName);
         console.log("email", email);
@@ -27,11 +28,11 @@ function Signup(updateState) {
             role
         })
 
-        console.log("login reponse", data)
+        console.log("Signup reponse", data)
         if (data.error) {
             return alert("invalid credentials")
         }
-        return alert("logged in")
+        return alert("Sucessfully Signed up")
     }
   return (
     <div>
@@ -130,15 +131,16 @@ function Signup(updateState) {
                                 setRole(e.target.value)
                         }}
                         >
-                            <option> Admin </option>
-                            <option> Instrctor </option>
-                            <option> trainee </option>
+                            <option value="" disabled selected> Select an option </option>
+                            <option value="admin"> Admin </option>
+                            <option value="instrctor"> Instrctor </option>
+                            <option value="trainee"> Trainee </option>
                         </select>
                     </div>
 
                     <div className="mt-6">
                         <button 
-                        onClick={()=>{SIGNUP()}}
+                        onClick={(e)=>{Signup(e)}}
                         className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
                             Create Account
                         </button>

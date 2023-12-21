@@ -36,7 +36,7 @@ const login = async () => {
                 {/* <form className="mt-6"> */}
                     <div className="mb-2">
                         <label
-                            for="email"
+                            // for="email"
                             className="block text-sm font-semibold text-gray-800"
                         >
                             Email
@@ -52,7 +52,7 @@ const login = async () => {
                     </div>
                     <div className="mb-2">
                         <label
-                            for="password"
+                            // for="password"
                             className="block text-sm font-semibold text-gray-800"
                         >
                             Password
