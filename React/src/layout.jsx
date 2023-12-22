@@ -1,7 +1,8 @@
 import React from 'react';
-import Login from './components/login';
-import Signup from './components/signup';
+import Login from './components/auth/login';
+import Signup from './components/auth/signup';
 import {useState} from 'react';
+import Header from './components/auth/navbar';
 
 
 const Layout = () => {
@@ -11,11 +12,15 @@ const Layout = () => {
   }
 
   return (
+    
     <div>
-    {isLogin && <Login updateState={updateState}/>}
-    {!isLogin && <Signup updateState={updateState}/>}
+      <div>
+        <Header/>
+      {isLogin && <Login updateState={updateState}/>}
+      {!isLogin && <Signup updateState={updateState}/>}
+      </div>
     </div>
   )
 }
 
-export default Layout
+export default Layout;
