@@ -155,8 +155,7 @@ console.log(role)
                         onClick={()=>{
                             void updateState.updateState(true);
                         }}
-                    >
-                        Log in
+                    >Log in
                     </span>
                 </p>
             </div>
