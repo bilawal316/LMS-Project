@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Teams from "./Team-management/teams";
 import { MdOutlineDashboard } from "react-icons/md";
 import { TbUsersGroup } from "react-icons/tb";
 import { AiOutlineProject } from "react-icons/ai";
@@ -26,7 +25,7 @@ const Sidebar = (updateState) => {
 
         <div className="flex gap-x-4 items-center">
           <img
-            src="/lms-logo.png" // Ensure the correct path to your image
+            src="/lms-logo.png" 
             alt=""
             className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"} bg-transparent`}
             style={{ width: open ? "20px" : "30px", height: "20px" }}
@@ -51,12 +50,6 @@ const Sidebar = (updateState) => {
                     <TbUsersGroup />
                         <p className={`${!open && "hidden"} origin-left duration-200`} 
                        > Teams</p>
-                    </li>
-                    <li className={`flex text rounded-md p-2 cursor-pointer hover:bg-light-white text-purple-700 text-sm items-center gap-x-4 mt-2`} onClick={() => {
-                        void updateState.updateState("TRAINEE")
-                    }}>                       <FaUsers />
-
-                        <span className={`${!open && "hidden"} origin-left duration-200`}>Trainee</span>
                     </li>
                     <li className={`flex text rounded-md p-2 cursor-pointer hover:bg-light-white text-purple-700 text-sm items-center gap-x-4 mt-2`} onClick={() => {
                         void updateState.updateState("PROJECTS")
