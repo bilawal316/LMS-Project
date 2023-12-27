@@ -4,31 +4,37 @@ import Navbar from '../instructor/navbar'
 import Sidebar from '../instructor/sidebar'
 import Home from "../instructor/home";
 import Teams from "../instructor/Team-management/teams";
-import Trainees from "../instructor/Trainee-management/trainee";
 import Tasks from "../instructor/Project-management/tasks";
 import Projects from "../instructor/Project-management/project";
-
+import Reports from "../instructor/Reports/reports";
 
 const Instructor_layout = () => {
-    const [component, setComponent] = useState("HOME");
+  const [component, setComponent] = useState("HOME");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const updateState = (newState) => {
     setComponent(newState);
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div>
-    <Navbar/>
-    <Sidebar updateState={updateState} />
-          {component == "HOME" && <Home />}
-          {component == "TEAMS" && <Teams />}
-         {component == "TRAINEE" && <Trainees />} 
-          {component == "TASKS" && <Tasks />}
-          {component == "PROJECTS" && <Projects />} 
-    <div className='h-screen'></div>
+        <div className=" w-screen h-screen flex flex-col bg-[#efebea]">
+          <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />
+          <div className="w-full h-full flex">
+            <Sidebar updateState={updateState} />
+            {component === "HOME" && <Home sidebarOpen={sidebarOpen} />}
+            {component === "TEAMS" && <Teams />}
+            {component === "TASKS" && <Tasks />}
+            {component === "PROJECTS" && <Projects />}
+            {component === "REPORTS" && <Reports />}
+          </div>
+        </div>
     </div>
-  )
+  );
 }
 
-export default Instructor_layout
+export default Instructor_layout;

@@ -6,7 +6,6 @@ import Home from "../traineee/home";
 import Teams from "../traineee/Team-view/teams";
 import Tasks from "../traineee/Project-view/task";
 import Projects from "../traineee/Project-view/project";
-import Reports from "../traineee/Reports/reports";
 
 const Trainee_layout = () => {
   const [component, setComponent] = useState("HOME");
@@ -30,9 +29,8 @@ const Trainee_layout = () => {
             {component === "TEAMS" && <Teams />}
             {component === "TASKS" && <Tasks />}
             {component === "PROJECTS" && <Projects />}
-            {component === "REPORTS" && <Reports />}
           </div>
-        </div>
+        </div>x
     </div>
   );
 }

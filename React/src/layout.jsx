@@ -16,7 +16,7 @@ const Layout = () => {
     
     <div>
       <div>
-        {/* <Instructor_layout/> */}
+        <Instructor_layout/>
         <Trainee_layout/>
       {/* {isLogin && <Login updateState={updateState}/>}
       {!isLogin && <Signup updateState={updateState}/>} */}

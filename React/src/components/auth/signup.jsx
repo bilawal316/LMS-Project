@@ -36,7 +36,7 @@ console.log(role)
     }
   return (
     <div>
-        <div className="flex pt-12">
+        <div className="flex">
             <img src={window.location.origin + '/signup.jpg'} />
             <div className="flex flex-col min-h-screen overflow-hidden w-screen bg-[#efebea]">
             <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">

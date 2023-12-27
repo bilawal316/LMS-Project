@@ -1,30 +1,157 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { SiSololearn } from "react-icons/si";
+import PropTypes from "prop-types";
 
-
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
+import { Fragment, useState } from 'react'
+import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-
-export default function Navbar() {
+const navigation = [
+  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
+  { name: 'Trainees', href: '#', icon: UsersIcon, current: false },
+  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
+  { name: 'Tasks', href: '#', icon: CalendarIcon, current: false },
+  { name: 'Teams', href: '#', icon: DocumentDuplicateIcon, current: false },
+  { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+]
+const teams = [
+  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
+  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
+  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+]
+export default function Navbar(props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   return (
-    <Disclosure as="nav" className="bg-[#efebea] w-screen fixed">
-      {({ open }) => (
+    <Disclosure as="nav" className="bg-[#efebea]">
+      {/* {({ open }) => ( */}
         <>
-          <div className="mx-auto max-w-8xl px-2 sm:px-6 lg:px-8">
+          <Transition.Root show={sidebarOpen} as={Fragment}>
+            <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+              <Transition.Child
+                as={Fragment}
+                enter="transition-opacity ease-linear duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="transition-opacity ease-linear duration-300"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className="fixed inset-0 bg-gray-900/80" />
+              </Transition.Child>
+
+              <div className="fixed inset-0 flex">
+                <Transition.Child
+                  as={Fragment}
+                  enter="transition ease-in-out duration-300 transform"
+                  enterFrom="-translate-x-full"
+                  enterTo="translate-x-0"
+                  leave="transition ease-in-out duration-300 transform"
+                  leaveFrom="translate-x-0"
+                  leaveTo="-translate-x-full"
+                >
+                  <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
+                    <Transition.Child
+                      as={Fragment}
+                      enter="ease-in-out duration-300"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="ease-in-out duration-300"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+
+                      <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                        <button type="button" className="-m-2.5 p-2.5 rounded-lg border border-purple-500 bg-white bg-opacity-50" onClick={() => setSidebarOpen(false)}>
+                          <span className="sr-only">Close sidebar</span>
+                          <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </Transition.Child>
+                    {/* Sidebar component, swap this element with another sidebar if you like */}
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-[#efebea] px-6 pb-4 ring-1 ring-white/10">
+                      <div className="flex h-16 shrink-0 items-center">
+                        {/* <img
+                          className="h-8 w-auto"
+                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                          alt="Your Company"
+                        /> */}
+                        <p className="text-purple-700 px-12 text-2xl font-bold">Tech Project</p>
+                      </div>
+                      <nav className="flex flex-1 flex-col">
+                        <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                          <li>
+                            <ul role="list" className="-mx-2 space-y-1">
+                              {navigation.map((item) => (
+                                <li key={item.name}>
+                                  <a
+                                    href={item.href}
+                                    onClick={() => {
+                                      void props.updateState(item.name.toUpperCase());
+                                    }}
+                                    className={classNames(
+                                      item.current
+                                        ? 'bg-purple-700 hover: text-white'
+                                        : 'text-purple-700 hover:text-white hover:bg-purple-700',
+                                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                    )}
+                                  >
+                                    <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                                    {item.name}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                          <li>
+                            <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
+                            <ul role="list" className="-mx-2 mt-2 space-y-1">
+                              {teams.map((team) => (
+                                <li key={team.name}>
+                                  <a
+                                    href={team.href}
+                                    className={classNames(
+                                      team.current
+                                        ? 'bg-purple-700 text-white'
+                                        : 'text-purple-700 hover:text-white hover:bg-purple-700',
+                                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                    )}
+                                  >
+                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-purple-700 text-white font-medium group-hover:text-white">
+                                      {team.initial}
+                                    </span>
+                                    <span className="truncate">{team.name}</span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                          <li className="mt-auto">
+                            <a
+                              href="#"
+                              className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-purple-700 hover:bg-purple-700 hover:text-white"
+                            >
+                              <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                              Settings
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </Dialog.Panel>
+                </Transition.Child>
+              </div>
+            </Dialog>
+          </Transition.Root>
+          <div className="mx-auto px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+              <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <button type="button" className="-m-2.5 p-2.5  lg:hidden" onClick={() => setSidebarOpen(true)}>
+                  <span className="sr-only">Open sidebar</span>
+                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                </button>
+                {/* <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
@@ -32,27 +159,24 @@ export default function Navbar() {
                   ) : (
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
-                </Disclosure.Button>
+                </Disclosure.Button> */}
               </div>
-              {/* <img
-                    className="h-8 w-auto ms-36 text-purple-700"
+              <div className="flex flex-1 items-center justify-center lg:items-stretch lg:justify-start">
+                <div className="flex flex-shrink-0 items-center lg:hidden">
+                  <img
+                    className="h-8 w-auto"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="LMS- Project"
-                  /> */}
-              <div className="flex flex-1 items-end justify-end sm:items-stretch sm:justify-end">
-                <div className="flex flex-shrink-0 items-center">
-                 
+                    alt="Your Company"
+                  />
                 </div>
-                <div className="hidden sm:ml-6 sm:block">
-                    {/* Items left align */}
-                  <div className="flex space-x-4 justify-end items-end">
-
+                {/* <div className="hidden sm:ml-6 sm:block">
+                  <div className="flex space-x-4">
                     {navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-purple-700' : 'text-purple-700 hover:bg-gray-700 hover:text-white',
+                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
@@ -61,12 +185,12 @@ export default function Navbar() {
                       </a>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 lg:static lg:inset-auto lg:ml-6 lg:pr-0">
                 <button
                   type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="relative rounded-full bg-purple-700 p-1 text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
@@ -76,7 +200,7 @@ export default function Navbar() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <Menu.Button className="relative flex rounded-full bg-purple-700 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <img
@@ -133,7 +257,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          {/* <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
                 <Disclosure.Button
@@ -141,7 +265,7 @@ export default function Navbar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-black hover:bg-gray-700 hover:text-white',
+                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}
@@ -150,9 +274,12 @@ export default function Navbar() {
                 </Disclosure.Button>
               ))}
             </div>
-          </Disclosure.Panel>
+          </Disclosure.Panel> */}
         </>
-      )}
+      {/* )} */}
     </Disclosure>
   )
 }
+Navbar.propTypes = {
+  updateState: PropTypes.func, 
+};
