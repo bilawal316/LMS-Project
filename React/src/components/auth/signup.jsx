@@ -133,7 +133,7 @@ console.log(role)
                         >
                             <option value="" disabled selected> Select an option </option>
                             <option value="admin"> Admin </option>
-                            <option value="instrctor"> Instrctor </option>
+                            <option value="instructor"> Instructor </option>
                             <option value="trainee"> Trainee </option>
                         </select>
                     </div>

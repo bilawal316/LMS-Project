@@ -1,26 +1,32 @@
-import React, { useState } from "react";
-import axios from 'axios';
+import { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Login = (updateState) => {
-  const navigate = useNavigate;
+function Login(updateState) {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const login = async (e) => {
     e.preventDefault();
-    console.log("email", email);
-    console.log("password", password);
+
     const { data } = await axios.post("http://localhost:3000/auth/login", {
       email,
-      password
+      password,
     });
-    console.log("login response", data);
+
     if (data.error) {
       return alert("Invalid Credentials");
     }
-     alert("Successfully logged in");
-    return navigate("/onboarding") 
+
+    console.log("data ", data.response);
+
+    if (data.response.role == "instructor") {
+      return navigate("/instructor");
+    }
+
+    navigate("onboarding", { state: { userId: data.response.userId } });
+    return alert("Logged in Successfully");
   };
 
   return (

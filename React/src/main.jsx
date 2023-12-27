@@ -2,15 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Auth_Layout from "./components/layout/auth_layout";
 import Instructor_layout from "./components/layout/instructor_layout";
-import Onboarding from './components/traineee/onboarding/onboarding';
+import Onboarding from './components/auth/onboarding';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import './index.css'
 
-
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
 import Trainee_layout from './components/layout/trainee_layout';
 
 const router = createBrowserRouter([
