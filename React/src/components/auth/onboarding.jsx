@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import Select from "react-select";
 import { useLocation } from "react-router-dom";
-const location = useLocation;
 
 
-const onboarding = (updateState) => {
-  const [instructors, setInstructors] = useState('');
+const Onboarding = (updateState) => {
+  const [instructors, setInstructors] = useState("");
   const [instructor, setInstructor] = useState([]);
+  const location = useLocation();
+  const userId = location.state.userId
 
   const getAllInstructors = async () => {
     await axios.get("http://localhost:3000/user/getAllInstructor").then((res) => {
@@ -24,10 +25,11 @@ const onboarding = (updateState) => {
   };
   const onboarding = async (e) => {
     e.preventDefault();
-    const userId = location.state.userId
     const { data } = await axios.post("http://localhost:3000/user/onbaording", {
-      instructorId,
+      instructorId: instructor,
+      userId
     });
+    console.log("data ", data);
 }
 
   useEffect(() => {
@@ -80,4 +82,4 @@ const onboarding = (updateState) => {
   );
 };
 
-export default onboarding;
+export default Onboarding;
