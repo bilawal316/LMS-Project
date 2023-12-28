@@ -36,6 +36,14 @@ const paginationSchema = joi.object().keys({
   sortOrder: joi.valid("ASC", "DESC"),
 });
 
+const onBoardingSchema = joi
+  .object()
+  .keys({
+    userId: joi.string().required(),
+    instructorId: joi.string().required(),
+  })
+  .unknown([false]);
+
 
 module.exports = {
   createUser: async (req, res) => {
@@ -112,6 +120,40 @@ module.exports = {
         error: error,
       });
     }
-  }
-  
+  },
+  onBoarding: async (req, res) => {
+    try {
+      const validate = await onBoardingSchema.validateAsync(req.body);
+      const user = await userService.onBoarding(validate);
+      if (user.error) {
+        return res.send({
+          error: user.error,
+        });
+      }
+      return res.send({
+        response: user.response,
+      });
+    } catch (error) {
+      return res.send({
+        error: error,
+      });
+    }
+  },
+  getAllInstructor: async (req, res) => {
+    try {
+      // const validate = await paginationSchema.validateAsync(req.query);
+        const users = await userService.getAllInstructor();
+      if (users.error) {
+        return res.send({
+          error: users.error,
+        });
+      }
+      return res.send({
+        response: users.response,
+      });
+    } catch (error) {
+      return res.send({
+        error: error,
+      });
+    }},
 }

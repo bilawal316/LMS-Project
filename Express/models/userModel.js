@@ -12,14 +12,11 @@ module.exports = {
             
         };
         
-
     } catch (error) {
         return {
             error: error,
         };
-
     }
-
 },
   getUserByEmail: async (email) => {
     try {     
@@ -138,4 +135,50 @@ isLoggedIn: async (email) => {
       };
     }
   },
+  onBoarding: async (userId, instructorId) => {
+    
+    try {
+      const user = await models.Users.update(
+        {
+          isRequested: true,
+          instructorId,
+        },
+        {
+          where: {
+            userId: userId,
+          },
+        }
+      );
+
+      return {
+        response: user,
+      };
+    } catch (error) {
+      return {
+        error: error,
+      };
+    }
+  },
+  getAllInstructor: async () => {
+    try {
+      const users = await models.Users.findAll({
+        // attributes : ["firstName", "lastName", "role", "email"]
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+      },
+      where: {
+        role: 'instructor',
+      },
+
+    })
+    return{
+      response: users,
+    };
+      
+    } catch (error) {
+      return{
+        error: error,
+      }
+    }
+    }  
 }

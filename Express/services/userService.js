@@ -99,6 +99,43 @@ module.exports = {
         error:error,
       };
     }
+  },
+  onBoarding: async (body) => {
+    try {
+      const user = await userModel.onBoarding(body.userId, body.instructorId);
+      if (!user.response || user.error) {
+        return {
+          error: "user does not exist",
+        };
+      }
+
+      return {
+        response: user.response,
+      };
+    } catch (error) {
+      return {
+        error: error,
+      };
+    }
+  },
+  getAllInstructor: async () => {
+    try {
+      const users = await userModel.getAllInstructor();
+      if (users.error) {
+        return {
+          error: users.error,
+        };
+      }
+
+      return {
+        response: users.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
   }
-  
 };

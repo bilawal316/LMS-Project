@@ -48,7 +48,7 @@ module.exports = {
 
            
             return {
-                response: token,
+                response: user.response,
             };
          } catch (error){
                 return {

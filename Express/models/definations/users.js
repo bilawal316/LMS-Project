@@ -31,8 +31,36 @@ Users.init(
       type: DataTypes.ENUM,
     values: ['instructor', 'trainee', 'admin']
     },
+    isRequested: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isApproved: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isBlocked: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },  
   },
   {
+    hooks: {
+      afterCreate: async (Users) => {
+        delete Users.dataValues.password;
+        const token = jwt.sign(Users.dataValues, config.jwt.secret, {
+          expiresIn: "1h",
+        });
+        await session.create({
+          userId: Users.dataValues.userId,
+          token,
+          sessionId: uuidV4(),
+        });
+      },
+    },
     sequelize,
     timestamps: true,
     paranoid: true,
