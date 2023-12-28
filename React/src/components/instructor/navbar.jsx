@@ -62,7 +62,7 @@ export default function Navbar(props) {
                     >
 
                       <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                        <button type="button" className="-m-2.5 p-2.5 rounded-lg border border-purple-500 bg-white bg-opacity-50" onClick={() => setSidebarOpen(false)}>
+                        <button type="button" className="-m-2.5 p-2.5 rounded-lg border border-purple-500 bg-purple-700 bg-opacity-50" onClick={() => setSidebarOpen(false)}>
                           <span className="sr-only">Close sidebar</span>
                           <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
                         </button>
@@ -147,7 +147,7 @@ export default function Navbar(props) {
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center lg:hidden">
                 {/* Mobile menu button*/}
-                <button type="button" className="-m-2.5 p-2.5  lg:hidden" onClick={() => setSidebarOpen(true)}>
+                <button type="button" className="-m-2.5 p-2.5  lg:hidden bg-purple-700" onClick={() => setSidebarOpen(true)}>
                   <span className="sr-only">Open sidebar</span>
                   <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                 </button>

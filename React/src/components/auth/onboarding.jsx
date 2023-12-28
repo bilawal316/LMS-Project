@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import { useLocation } from "react-router-dom";
+const location = useLocation;
+
 
 const onboarding = (updateState) => {
-  const navigate = useNavigate;
+  const [instructors, setInstructors] = useState('');
+  const [instructor, setInstructor] = useState([]);
 
-  const login = async (e) => {
+  const getAllInstructors = async () => {
+    await axios.get("http://localhost:3000/user/getAllInstructor").then((res) => {
+      console.log(res)
+      const list_arr = res.data.response.map(elem => (
+        {
+          value: elem.userId,
+          label : [elem.firstName,elem.lastName].join(" ")
+        } 
+      ));
+      setInstructors(list_arr);
+    })
+    
+  };
+  const onboarding = async (e) => {
     e.preventDefault();
-    const { data } = await axios.post("http://localhost:3000/auth/login", {
-      email,
-      password
+    const userId = location.state.userId
+    const { data } = await axios.post("http://localhost:3000/user/onbaording", {
+      instructorId,
     });
 }
+
+  useEffect(() => {
+    getAllInstructors();
+  }, []);
+
   return (
     <div>
       <div className="flex overflow-x-hidden">
@@ -31,16 +53,20 @@ const onboarding = (updateState) => {
                 >
                   Select Instructor
                 </label>
-                <select className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 
-                focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40">
-                            <option value="" disabled defaultValue> Select an option </option>
-                            <option value="admin"> Afaq Ahmed </option>
-                            <option value="instrctor"> Ali Ahmad </option>
-                            <option value="trainee"> Bilawal Zaman </option>
-                </select>
+                <Select
+              className="bg-white  rounded-lg mb-2 focus:outline-none text-black font-medium"
+              isSearchable={true}
+              options={instructors}
+              onChange={(e) => {
+                setInstructor(e.value);
+              }}
+              isDisabled={false}
+              placeholder="Select Role"
+            />
               </div>
               <div className="mt-6">
               <button
+                    onClick={(e) => { onboarding(e) }}
                     className="w-full px-4 py-2 tracking-wide bg-purple-700 text-white
                     transition-colors duration-200 transform rounded-md focus:outline-none">
                     Select Instructor
