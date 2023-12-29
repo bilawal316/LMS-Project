@@ -23,7 +23,7 @@ const Instructor_layout = () => {
 
   return (
     <div>
-        <div className=" w-screen h-screen flex flex-col bg-[#efebea]">
+        <div className=" w-screen flex flex-col bg-[#efebea]">
           <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />
           <div className="w-full h-full flex">
             <Sidebar updateState={updateState} />

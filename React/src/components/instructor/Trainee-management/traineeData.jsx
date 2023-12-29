@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Trainee = () => {
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+const TraineeData = () => {
+
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
 
     const [isModalOpen, setModalOpen] = useState(false);
@@ -97,12 +98,14 @@ const Trainee = () => {
     useEffect(() => {
         void getAllTrainees();
     }, []);
-  return (
-    <>
-        <div className="w-full p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
+
+    
+    return (
+
+        <div className='className="h-screen flex justify-center items-center my-8"'>
             {isEditModalOpen && (
                 <div className="modal-container  flex items-center justify-center z-100">
-                    <div className="absolute  bg-[#efebea] opacity-50" onClick={() => setEditModalOpen(false)}></div>
+                    <div className="absolute  bg-black opacity-50" onClick={() => setEditModalOpen(false)}></div>
                     <div className="flex flex-col gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
                         <h2 className="text-xl font-semibold leading tracking">
                             Edit Trainee
@@ -166,7 +169,7 @@ const Trainee = () => {
             )}
             {isModalOpen && (
                 <div className="modal-container flex items-center justify-center z-100">
-                    <div className="absolute  bg-[#efebea] opacity-50" onClick={handleCloseModal}></div>
+                    <div className="absolute  bg-black opacity-50" onClick={handleCloseModal}></div>
                     <div className="flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
                         <h2 className="flex items-center gap-2 text-xl font-semibold leadi tracki">
                             <span className=''>Are you sure you want to block this user?</span>
@@ -189,33 +192,14 @@ const Trainee = () => {
                     </div>
                 </div>
             )}
-            <div className={`h-full w-full flex ${contentClassName}`}>
-                <div className="w-full">
-                    <nav aria-label="breadcrumb" className="text-purple-700 w-full p-4  dark:text-purple-700">
-                        <ol className="text-purple-700 mt-6 flex h-8 space-x-2 dark:text-purple-700">
-                            <li className="text-purple-700 flex items-center">
-                                <a rel="noopener noreferrer" href="#" title="Back to homepage" className="text-purple-700 text-sm hover:text-black flex items-center hover:underline">Instructor</a>
-                            </li>
-                            <li className="flex items-center space-x-1">
-                                <span className="dark:text-gray-400">/</span>
-                                <a rel="noopener noreferrer" href="#" className="text-purple-700 text-sm hover:text-black flex items-center px-1 capitalize hover:underline">Trainees</a>
-                            </li>
-
-                        </ol>
-                        <h3 className="font-bold text-3xl ">Trainees</h3>
-
-                    </nav>
+            <div className={`h-screen w-screen flex justify-center ${contentClassName}`}>
+                <div className=" ps-12 w-10/12 h-5/6">
+                    
+                       
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
                         <h2 className="mb-4 text-2xl font-semibold leadi">Trainee List</h2>
-                        <div className="overflow-x-auto w-full bg-white ">
-                            <table className="w-full text-sm border-collapse">                                  <colgroup>
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                            </colgroup>
+                        <div className="overflow-x-auto w-11/12 bg-white ">
+                            <table className="w-full text-sm border-collapse">
 
                                 <thead className="bg-white">
                                     <tr className="text-left">
@@ -263,8 +247,7 @@ const Trainee = () => {
             </div>
 
         </div>
-    </>
-  );
+    );
 }
 
-export default Trainee
+export default TraineeData;
