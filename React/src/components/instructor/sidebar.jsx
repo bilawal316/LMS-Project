@@ -12,6 +12,7 @@ import {
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: true },
   { name: 'Teams', href: '#', icon: DocumentDuplicateIcon, current: false },
+  { name: 'Trainees', href: '#', icon: DocumentDuplicateIcon, current: false },
   { name: 'Projects', href: '#', icon: FolderIcon, current: false },
   { name: 'Tasks', href: '#', icon: CalendarIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },

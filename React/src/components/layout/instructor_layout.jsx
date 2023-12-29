@@ -7,6 +7,7 @@ import Teams from "../instructor/Team-management/teams";
 import Tasks from "../instructor/Project-management/tasks";
 import Projects from "../instructor/Project-management/project";
 import Reports from "../instructor/Reports/reports";
+import Trainees from "../instructor/Trainee-management/trainee";
 
 const Instructor_layout = () => {
   const [component, setComponent] = useState("HOME");
@@ -28,6 +29,7 @@ const Instructor_layout = () => {
             <Sidebar updateState={updateState} />
             {component === "HOME" && <Home sidebarOpen={sidebarOpen} />}
             {component === "TEAMS" && <Teams />}
+            {component === "TRAINEES" && <Trainees/>}
             {component === "TASKS" && <Tasks />}
             {component === "PROJECTS" && <Projects />}
             {component === "REPORTS" && <Reports />}
