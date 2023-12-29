@@ -36,36 +36,17 @@ module.exports = {
       }
     }
   },
-  getAllUsers: async (offset, query) => {
+  getAllUsers: async () => {
     try {
       const users = await models.Users.findAll({
         // attributes : ["firstName", "lastName", "role", "email"]
         attributes: {
           exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
       },
-      where: [
-        {
-          ...(query.firstName
-            ? { firstName: { [Op.substring]: query.firstName } }
-            : true),
-        },
-        {
-          ...(query.lastName
-            ? { lastName: { [Op.substring]: query.lastName } }
-            : true),
-        },
-        {
-          ...(query.email
-            ? { email: { [Op.substring]: query.email } }
-            : true),
-        },
-        {
-          ...(query.role ? { role: { [Op.in]: [query.role] } } : true),
-        },
-      ],
-      offset: offset,
-      limit: query.limit
-    })
+      where:{
+        role:"trainee"
+      }
+      })
     return{
       response: users,
     };

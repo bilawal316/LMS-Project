@@ -66,10 +66,9 @@ module.exports = {
         });
     };
 },
-  getAllUser: async (req, res) => {
+  getAllUsers: async (req, res) => {
   try {
-    const validate = await paginationSchema.validateAsync(req.query);
-      const users = await userService.getAllUsers(validate);
+      const users = await userService.getAllUsers();
     if (users.error) {
       return res.send({
         error: users.error,

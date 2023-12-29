@@ -4,10 +4,10 @@ const router = require("express").Router();
 
 
 router.post("/createUser", userController.createUser);
-router.get("/getAllUsers", trainee, userController.getAllUser);
+router.get("/getAllUsers",userController.getAllUsers);
 router.get("/getAllInstructor", userController.getAllInstructor);
 router.delete("/deleteUser", instructor, userController.deleteUser);
-router.put("/updateUser", admin, userController.updateUser);
+router.put("/updateUser",userController.updateUser);
 router.post("/onbaording",  userController.onBoarding);
 
 
