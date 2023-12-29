@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../../bin/dbConnection");
 
+
 class Users extends Model {}
 
 Users.init(
@@ -48,19 +49,7 @@ Users.init(
     },  
   },
   {
-    hooks: {
-      afterCreate: async (Users) => {
-        delete Users.dataValues.password;
-        const token = jwt.sign(Users.dataValues, config.jwt.secret, {
-          expiresIn: "1h",
-        });
-        await session.create({
-          userId: Users.dataValues.userId,
-          token,
-          sessionId: uuidV4(),
-        });
-      },
-    },
+
     sequelize,
     timestamps: true,
     paranoid: true,
