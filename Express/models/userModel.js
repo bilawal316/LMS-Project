@@ -33,30 +33,58 @@ module.exports = {
   
       return {
         error: error
-      }
+      } 
     }
   },
-  getAllUsers: async () => {
-    try {
-      const users = await models.Users.findAll({
-        // attributes : ["firstName", "lastName", "role", "email"]
-        attributes: {
-          exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-      },
-      where:{
-        role:"trainee"
+  getAllUsers: async ( offset, query) => {
+      try {
+          console.log("model",offset, query)
+
+          const users = await models.Users.findAll({
+              // attributes : ["firstName", "lastName", "role", "email"]
+              attributes: {
+                  exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+              },
+              where: [
+                  {
+                      ...(query.firstName
+                          ? { firstName: { [Op.substring]: query.firstName } }
+                          : true),
+                  },
+                  {
+                      ...(query.lastName
+                          ? { lastName: { [Op.substring]: query.lastName } }
+                          : true),
+                  },
+                  {
+                      ...(query.email
+                          ? { email: { [Op.substring]: query.email } }
+                          : true),
+                  },
+                  {
+                    ...(query.role ? { role: query.role } : {}),
+                  },
+              ],
+              order: [[query.sortValue, query.sortOrder]],
+              offset: offset,
+              limit: query.limit,
+
+
+
+
+          })
+          return {
+              response: users,
+          };
+
+
+      } catch (error) {
+          return {
+              error: error,
+          };
       }
-      })
-    return{
-      response: users,
-    };
-      
-    } catch (error) {
-      return{
-        error: error,
-      }
-    }
-    },
+
+  },
     deleteUser: async (query) => {
       try {
         const user = await models.Users.destroy({

@@ -9,7 +9,8 @@ const Trainee = () => {
     const [isDimmed, setDimmed] = useState(false);
 
     const [selectedTraineeId, setSelectedTraineeId] = useState(null);
-  
+    const [currentPage, setCurrentPage] = useState(1);  // default page is 1
+
     
 
     const handleCloseModal = () => {
@@ -58,10 +59,17 @@ const Trainee = () => {
         }
     }
 
-
-    const getAllTrainees = async () => {
+   const getAllTrainees = async (pageNo) => {
         try {
-            const { data } = await axios.get("http://localhost:3000/user/getAllUsers");
+            setCurrentPage(pageNo);  // Update the currentPage state
+
+            const { data } = await axios.get("http://localhost:3000/user/getAllUsers",{
+                params: {
+                    role:"trainee",
+                    pageNo: pageNo
+                }
+            });
+            console.log(data)
             if (data.response) {
                 const formattedTrainees = data.response.map(item => ({
                     firstName: item.firstName,
@@ -97,6 +105,8 @@ const Trainee = () => {
     useEffect(() => {
         void getAllTrainees();
     }, []);
+
+
   return (
     <>
         <div className="w-full p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
@@ -191,7 +201,7 @@ const Trainee = () => {
             )}
             <div className={`h-full w-full flex ${contentClassName}`}>
                 <div className="w-full">
-                    <nav aria-label="breadcrumb" className="text-purple-700 w-full p-4  dark:text-purple-700">
+                    <nav className="text-purple-700 w-full p-4  dark:text-purple-700">
                         <ol className="text-purple-700 mt-6 flex h-8 space-x-2 dark:text-purple-700">
                             <li className="text-purple-700 flex items-center">
                                 <a rel="noopener noreferrer" href="#" title="Back to homepage" className="text-purple-700 text-sm hover:text-black flex items-center hover:underline">Instructor</a>
@@ -200,29 +210,19 @@ const Trainee = () => {
                                 <span className="dark:text-gray-400">/</span>
                                 <a rel="noopener noreferrer" href="#" className="text-purple-700 text-sm hover:text-black flex items-center px-1 capitalize hover:underline">Trainees</a>
                             </li>
-
                         </ol>
                         <h3 className="font-bold text-3xl ">Trainees</h3>
 
                     </nav>
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
-                        <h2 className="mb-4 text-2xl font-semibold leadi">Trainee List</h2>
+                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Trainee List</h2>
                         <div className="overflow-x-auto w-full bg-white ">
-                            <table className="w-full text-sm border-collapse">                                  <colgroup>
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                            </colgroup>
-
-                                <thead className="bg-white">
+                            <table className="w-full text-sm border-collapse">
+                                <thead className="bg-yellow-200">
                                     <tr className="text-left">
                                         <th className="p-3 border border-gray-300">Name</th>
                                         <th className="p-3 border border-gray-300">Email</th>
                                         <th className="p-3 border border-gray-300">Cohort</th>
-
                                         <th className="p-3 border border-gray-300">Action</th>
                                     </tr>
                                 </thead>
@@ -257,6 +257,23 @@ const Trainee = () => {
 
                                 </tbody>
                             </table>
+                            <div className="flex justify-center space-x-1 text-gray-100 p-2">
+                                    <button title="previous" type="button" className="inline-flex items-center justify-center w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800">
+                                        <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-4">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <button type="button"  onClick={() => getAllTrainees(1)}   title="Page 1" className="bg-purple-700 inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border-rounded shadow-md text-white border-white">1</button>
+                                    <button type="button" onClick={() => getAllTrainees(2)} className ="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 2">2</button>
+                                    <button type="button"  onClick={() => getAllTrainees(3)} className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 3">3</button>
+                                    <button type="button"  onClick={() => getAllTrainees(4)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 4">4</button>
+                                    <button type="button"  onClick={() => getAllTrainees(5)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 5">5</button>
+                                    <button title="next" type="button" className="inline-flex items-center justify-center w-8 h-8 py-0 border rounded-md shadow-md bg-white text-red-800 border-black">
+                                        <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-4">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                            </div>
                         </div>
                     </div>
                 </div>

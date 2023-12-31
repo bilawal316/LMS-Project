@@ -38,25 +38,27 @@ module.exports = {
             error: error,
         };
     }
-},
-  getAllUsers: async (query) => {
-    try {
-      const users = await userModel.getAllUsers();
+},getAllUsers: async (query) => {
+  try {
+      const offset = (query.pageNo - 1) * query.limit;
+      console.log(offset)
+      const users = await userModel.getAllUsers(offset, query);
       if (users.error) {
-        return {
-          error: users.error,
-        };
-      }
+          return {
+              error: users.error,
+          }
+      } return {
+          response: users.response,
+      };
 
+
+  } catch (error) {
       return {
-        response: users.response,
+          error: error,
       };
-    } catch (error) {
-      return {
-        error: error,
-      };
-    }
-  },
+  }
+
+},
   deleteUser: async (query) => {
   try {
     const user = await userModel.deleteUser(query);

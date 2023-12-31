@@ -24,17 +24,18 @@ const updateUserSchema = joi.object().keys({
 })
 
 const paginationSchema = joi.object().keys({
-  pageNo: joi.number().required().greater(0),
-  limit: joi.number().valid(5, 10),
+  pageNo: joi.number().greater(0).default(1),
+  limit: joi.number().valid(5, 10).default(5),
+  sortValue: joi
+      .string()
+      .valid("userId", "email", "role", "firstName", "lastName").default("firstName"),
+  sortOrder: joi.valid("ASC", "DESC").default("ASC"),
   firstName: joi.string(),
   lastName: joi.string(),
   email: joi.string(),
-  role: joi.string(),
-  sortValue: joi
-    .string()
-    .valid("userId", "email", "role", "firstName", "lastName"),
-  sortOrder: joi.valid("ASC", "DESC"),
-});
+  role: joi.string().valid("instructor", "trainee"),
+
+})
 
 const onBoardingSchema = joi
   .object()
@@ -66,22 +67,29 @@ module.exports = {
         });
     };
 },
-  getAllUsers: async (req, res) => {
-  try {
-      const users = await userService.getAllUsers();
-    if (users.error) {
-      return res.send({
-        error: users.error,
-      });
+getAllUsers: async (req, res) => {
+    try {
+
+
+        const validate = await paginationSchema.validateAsync(req.query);
+        const users = await userService.getAllUsers(validate);
+        if (users.error) {
+            return res.send({
+                error: users.error,
+            });
+
+        }
+        return res.send({
+            response: users.response,
+        });
+
     }
-    return res.send({
-      response: users.response,
-    });
-  } catch (error) {
-    return res.send({
-      error: error,
-    });
-  }},
+    catch (error) {
+        return res.send({
+            error: error
+        });
+    };
+},
   deleteUser: async (req, res) => {
   try {
       const validate = await getByUserIdSchema.validateAsync(req.query);
