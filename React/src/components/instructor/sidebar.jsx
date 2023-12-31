@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 
+
+
 import {
   CalendarIcon,
   ChartPieIcon,
@@ -8,14 +10,17 @@ import {
   FolderIcon,
   HomeIcon,
   UsersIcon,
+  UserIcon
 } from '@heroicons/react/24/outline'
 const navigation = [
   { name: 'Home', href: '#', icon: HomeIcon, current: true },
+  { name: 'Profile', href: '#', icon: UserIcon, current: false },
   { name: 'Teams', href: '#', icon: DocumentDuplicateIcon, current: false },
-  { name: 'Trainees', href: '#', icon: DocumentDuplicateIcon, current: false },
+  { name: 'Trainees', href: '#', icon: UsersIcon, current: false },
   { name: 'Projects', href: '#', icon: FolderIcon, current: false },
   { name: 'Tasks', href: '#', icon: CalendarIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+  { name: 'Request', href: '#', icon: ChartPieIcon, current: false },
 ]
 const teams = [
   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },

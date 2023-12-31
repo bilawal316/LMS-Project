@@ -59,6 +59,26 @@ module.exports = {
   }
 
 },
+getAllRequests: async () => {
+  try {
+
+      const users = await userModel.getAllRequests();
+      if (users.error) {
+          return {
+              error: users.error,
+          }
+      } return {
+          response: users.response,
+      };
+
+
+  } catch (error) {
+      return {
+          error: error,
+      };
+  }
+
+},
   deleteUser: async (query) => {
   try {
     const user = await userModel.deleteUser(query);
@@ -79,7 +99,7 @@ module.exports = {
   },
   updateUser: async (body) => {
     try {
-      const isUser = await userModel.getUserByEmail(body.email);
+      const isUser = await userModel.getUserByUserId(body.userId);
       if(!isUser.response || isUser.error){
         return{
           error: "user does not exists"

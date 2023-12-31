@@ -17,10 +17,12 @@ const getByUserIdSchema = joi.object().keys({
 
 const updateUserSchema = joi.object().keys({
   userId: joi.string().required(),
-  firstName: joi.string().required().min(3).max(40),
-  lastName: joi.string().required().min(3).max(40),
-  email: joi.string().required().email(),
+  firstName: joi.string().min(3).max(40),
+  lastName: joi.string().min(3).max(40),
+  email: joi.string().email(),
   role: joi.string().valid("instructor", "trainee", "admin"),
+  cohort:joi.string(),
+  isApproved:joi.boolean()
 })
 
 const paginationSchema = joi.object().keys({
@@ -89,6 +91,27 @@ getAllUsers: async (req, res) => {
             error: error
         });
     };
+},
+getAllRequests: async (req, res) => {
+  console.log("Bilawal")
+  try {
+      const users = await userService.getAllRequests();
+      if (users.error) {
+          return res.send({
+              error: users.error,
+          });
+
+      }
+      return res.send({
+          response: users.response,
+      });
+
+  }
+  catch (error) {
+      return res.send({
+          error: error
+      });
+  };
 },
   deleteUser: async (req, res) => {
   try {

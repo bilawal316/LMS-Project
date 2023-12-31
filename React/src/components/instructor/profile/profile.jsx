@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 
 
-const Trainee = () => {
+const Profile = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [isDimmed, setDimmed] = useState(false);
 
-    const [selectedTraineeId, setSelectedTraineeId] = useState(null);
+    const [selectedProfileId, setSelectedProfileId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);  // default page is 1
 
     
@@ -23,10 +22,10 @@ const Trainee = () => {
 
 
 
-    const [currentTrainee, setCurrentTrainee] = useState(null);
-    const handleEditClick = (trainee) => {
-        setCurrentTrainee(trainee);
-        setEditData(trainee);
+    const [currentProfile, setCurrentProfile] = useState(null);
+    const handleEditClick = (Profile) => {
+        setCurrentProfile(Profile);
+        setEditData(Profile);
         setEditModalOpen(true);
         setDimmed(true); 
     };
@@ -38,7 +37,7 @@ const Trainee = () => {
 
     const contentClassName = isDimmed ? 'dimmed' : '';
 
-    const [Trainees, setTrainees] = useState([]);
+    const [Profiles, setProfiles] = useState([]);
 
     const update = async (updatedData) => {
         try {
@@ -46,51 +45,50 @@ const Trainee = () => {
             const { data } = await axios.put("http://localhost:3000/user/updateUser", updatedData);
             console.log(data); 
 
-            // Update the Trainees state with the updated data
-            setTrainees(prevTrainees => {
-                const updatedIndex = prevTrainees.findIndex(trainee => trainee.email === updatedData.email);
+            // Update the Profiles state with the updated data
+            setProfiles(prevProfiles => {
+                const updatedIndex = prevProfiles.findIndex(Profile => Profile.email === updatedData.email);
                 if (updatedIndex !== -1) {
-                    const updatedTrainees = [...prevTrainees];
-                    updatedTrainees[updatedIndex] = updatedData;
-                    return updatedTrainees;
+                    const updatedProfiles = [...prevProfiles];
+                    updatedProfiles[updatedIndex] = updatedData;
+                    return updatedProfiles;
                 }
-                return prevTrainees;
+                return prevProfiles;
             });
 
         } catch (error) {
-            console.error("Error updating Trainee:", error);
+            console.error("Error updating Profile:", error);
         }
     }
 
-   const getAllTrainees = async (pageNo) => {
+   const getAllProfiles = async (pageNo) => {
         try {
             setCurrentPage(pageNo);  // Update the currentPage state
 
             const { data } = await axios.get("http://localhost:3000/user/getAllUsers",{
                 params: {
-                    role:"trainee",
+                    role:"instructor",
                     pageNo: pageNo
                 }
             });
             console.log(data)
             if (data.response) {
-                const formattedTrainees = data.response.map(item => ({
+                const formattedProfiles = data.response.map(item => ({
                     firstName: item.firstName,
                     lastName: item.lastName,
                     email: item.email,
-                    cohort: item.cohort,
-                    stack: item.stack,
+                    role: item.role,
                     userId: item.userId
                 }));
-                setTrainees(formattedTrainees);
+                setProfiles(formattedProfiles);
             }
         } catch (error) {
-            console.error("Error fetching Trainees:", error);
+            console.error("Error fetching Profiles:", error);
         }
     };
-    const blockUser = async (trainee) => {
+    const blockUser = async (Profile) => {
         try {
-           const {data}= await axios.post("http://localhost:3000/user/blockUser", { userId: trainee });
+           const {data}= await axios.post("http://localhost:3000/user/blockUser", { userId: Profile });
             console.log(data.response)
         } catch (error) {
             console.error("Error approving request:", error);
@@ -99,17 +97,17 @@ const Trainee = () => {
     };
 
 
-    const handleBlockClick = (trainee) => {
-        setSelectedTraineeId(trainee.userId);
+    const handleBlockClick = (Profile) => {
+        setSelectedProfileId(Profile.userId);
         setModalOpen(true);
         setDimmed(true);
     };
     const handlePageChange = (direction) => {
         const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
-        getAllTrainees(newPage);
+        getAllProfiles(newPage);
       };
     useEffect(() => {
-        void getAllTrainees();
+        void getAllProfiles();
     }, []);
 
 
@@ -121,7 +119,7 @@ const Trainee = () => {
                     <div className="absolute  bg-[#efebea] opacity-50" onClick={() => setEditModalOpen(false)}></div>
                     <div className="flex flex-col gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
                         <h2 className="text-xl font-semibold leading tracking">
-                            Edit Trainee
+                            Edit Profile
                         </h2>
                         <div className="mt-4">
                             {/* Here you can have your edit form fields */}
@@ -189,13 +187,13 @@ const Trainee = () => {
                         </h2>
                         <p className="flex-1 dark:text-gray-400">By blocking this user, they will no longer be able to interact with you or view your content.</p>
                         <div className="flex flex-col justify-end gap-3 mt-6 sm:flex-row">
-                            {Trainees.map((trainee, index) => (
-                                <div key={index}> {selectedTraineeId === trainee.userId ? (
+                            {Profiles.map((Profile, index) => (
+                                <div key={index}> {selectedProfileId === Profile.userId ? (
                                     <button className="px-6 py-2 mr-5 rounded-sm shadow-sm bg-gray-200 text-black" onClick={handleCloseModal}>Close</button>
                                    
                                   ) :null}
-                                    {selectedTraineeId === trainee.userId ? (
-                                        <button className="px-6 py-2 rounded-sm shadow-sm bg-red-500 text-white" onClick={() => { handleCloseModal(); blockUser(trainee.userId); }}>Block</button>
+                                    {selectedProfileId === Profile.userId ? (
+                                        <button className="px-6 py-2 rounded-sm shadow-sm bg-red-500 text-white" onClick={() => { handleCloseModal(); blockUser(Profile.userId); }}>Block</button>
                                     ) : null}
                                 </div>
                             ))}
@@ -214,46 +212,54 @@ const Trainee = () => {
                             </li>
                             <li className="flex items-center space-x-1">
                                 <span className="dark:text-gray-400">/</span>
-                                <a rel="noopener noreferrer" href="#" className="text-purple-700 text-sm hover:text-black flex items-center px-1 capitalize hover:underline">Trainees</a>
+                                <a rel="noopener noreferrer" href="#" className="text-purple-700 text-sm hover:text-black flex items-center px-1 capitalize hover:underline">Profiles</a>
                             </li>
                         </ol>
-                        <h3 className="font-bold text-3xl ">Trainees</h3>
+                        <h3 className="font-bold text-3xl ">Profiles</h3>
 
                     </nav>
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
-                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Trainee List</h2>
+                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Profile List</h2>
                         <div className="overflow-x-auto w-full bg-white ">
                             <table className="w-full text-sm border-collapse">
                                 <thead className="bg-yellow-200">
                                     <tr className="text-left">
-                                        <th className="p-3 border border-gray-300">Name</th>
+                                        <th className="p-3 border border-gray-300">First Name</th>
+                                        <th className="p-3 border border-gray-300">Last Name</th>
+                                        <th className="p-3 border border-gray-300">User Id</th>
                                         <th className="p-3 border border-gray-300">Email</th>
-                                        <th className="p-3 border border-gray-300">Cohort</th>
+                                        <th className="p-3 border border-gray-300">Role</th>
                                         <th className="p-3 border border-gray-300">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Trainees.map((trainee, index) => (
+                                    {Profiles.map((Profile, index) => (
 
                                         <tr key={index} className="border-b border-opacity-20 border-gray-700 bg-white">
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.firstName + " " + trainee.lastName}</p>
+                                                <p>{Profile.firstName}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.email}</p>
+                                                <p>{Profile.lastName}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.cohort}
+                                                <p>{Profile.userId}</p>
+                                            </td>
+                                            <td className="p-3 border border-gray-300">
+                                                <p>{Profile.email}</p>
+                                            </td>
+                                            <td className="p-3 border border-gray-300">
+                                                <p>{Profile.role}
                                                 </p>
                                             </td>
 
                                             <td className="p-3 border border-gray-300">
 
-                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(trainee)}>                                                <span>Edit</span>
+                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(Profile)}>                                                <span>Edit</span>
 
                                                 </span>  <span
                                                     className="px-3 py-2 text-white rounded-md bg-red-500 cursor-pointer"
-                                                    onClick={() => handleBlockClick(trainee)} // Pass the trainee object here
+                                                    onClick={() => handleBlockClick(Profile)} // Pass the Profile object here
                                                 >
                                                     <span>Block</span>
                                                 </span>
@@ -263,24 +269,6 @@ const Trainee = () => {
 
                                 </tbody>
                             </table>
-                            <div className="flex justify-center space-x-1 text-gray-100 p-2">
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('prev')}
-                                    >
-                                    <FaArrowLeft className= 'flex text-red-500'/>
-                                    </button>
-                                    <button type="button"  onClick={() => getAllTrainees(1)}   title="Page 1" className="bg-purple-700 inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border-rounded shadow-md text-white border-white">1</button>
-                                    <button type="button" onClick={() => getAllTrainees(2)} className ="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 2">2</button>
-                                    <button type="button"  onClick={() => getAllTrainees(3)} className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 3">3</button>
-                                    <button type="button"  onClick={() => getAllTrainees(4)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 4">4</button>
-                                    <button type="button"  onClick={() => getAllTrainees(5)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 5">5</button>
-                                    
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('next')}
-                                    >
-                                    <FaArrowRight className= 'flex text-red-500'/>
-                                    </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -291,4 +279,4 @@ const Trainee = () => {
   );
 }
 
-export default Trainee
+export default Profile

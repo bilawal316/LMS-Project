@@ -36,6 +36,24 @@ module.exports = {
       } 
     }
   },
+  getUserByUserId: async (userId) => {
+    try {     
+      const user = await models.Users.findOne({
+        where: {
+          userId: userId,
+      }
+    });
+    return{
+      response: user
+    }
+    } catch (error) {
+  
+      return {
+        error: error
+      } 
+    }
+  },
+  
   getAllUsers: async ( offset, query) => {
       try {
           console.log("model",offset, query)
@@ -190,5 +208,29 @@ isLoggedIn: async (email) => {
         error: error,
       }
     }
-    }  
+    },
+    getAllRequests: async () => {
+      try {
+          
+          const users = await models.Users.findAll({
+              // attributes : ["firstName", "lastName", "role", "email"]
+              attributes: {
+                  exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+              },
+              where:{
+                isRequested: true,
+                isApproved: false,
+                isBlocked: false
+              }
+            })
+          return {
+              response: users,
+          };
+      } catch (error) {
+          return {
+              error: error,
+          };
+      }
+
+  },  
 }

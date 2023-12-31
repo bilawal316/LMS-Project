@@ -32,6 +32,9 @@ Users.init(
       type: DataTypes.ENUM,
     values: ['instructor', 'trainee', 'admin']
     },
+    cohort: {
+      type: DataTypes.STRING(),
+    },
     isRequested: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

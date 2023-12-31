@@ -8,6 +8,8 @@ import Tasks from "../instructor/Project-management/tasks";
 import Projects from "../instructor/Project-management/project";
 import Reports from "../instructor/Reports/reports";
 import Trainees from "../instructor/Trainee-management/trainee";
+import Request from "../instructor/request/request";
+import Profile from "../instructor/profile/profile";
 
 const Instructor_layout = () => {
   const [component, setComponent] = useState("HOME");
@@ -28,11 +30,13 @@ const Instructor_layout = () => {
           <div className="w-full h-full flex">
             <Sidebar updateState={updateState} />
             {component === "HOME" && <Home sidebarOpen={sidebarOpen} />}
+            {component === "PROFILE" && <Profile/> }
             {component === "TEAMS" && <Teams />}
             {component === "TRAINEES" && <Trainees/>}
             {component === "TASKS" && <Tasks />}
             {component === "PROJECTS" && <Projects />}
             {component === "REPORTS" && <Reports />}
+            {component === "REQUEST" && <Request/>}
           </div>
         </div>
     </div>
