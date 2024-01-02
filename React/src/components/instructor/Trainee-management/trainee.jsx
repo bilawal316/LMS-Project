@@ -115,7 +115,7 @@ const Trainee = () => {
 
   return (
     <>
-        <div className="w-full p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
+        <div className="w-full flex p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
             {isEditModalOpen && (
                 <div className="modal-container  flex items-center justify-center z-100">
                     <div className="absolute  bg-[#efebea] opacity-50" onClick={() => setEditModalOpen(false)}></div>

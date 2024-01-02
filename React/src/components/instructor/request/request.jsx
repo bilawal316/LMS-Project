@@ -100,7 +100,8 @@ const Request = () => {
                                             <td className="p-3 border border-gray-300">
 
                                                 <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer"
-                                                onClick={() => approveRequest(Request.userId)}>                                                <span>Approve</span>
+                                                onClick={() => approveRequest(Request.userId)}>
+                                                    <span>Approve</span>
 
                                                 </span>  <span
                                                     className="px-3 py-2 text-white rounded-md bg-red-500 cursor-pointer"
@@ -118,7 +119,7 @@ const Request = () => {
                                     <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
                                     onClick={() => handlePageChange('prev')}
                                     >
-                                    <FaArrowLeft className= 'flex text-red-500'/>
+                                    <FaArrowLeft className= 'flex text-purple-700'/>
                                     </button>
                                     <button type="button"  onClick={() => getAllRequests(1)}   title="Page 1" className="bg-purple-700 inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border-rounded shadow-md text-white border-white">1</button>
                                     <button type="button" onClick={() => getAllRequests(2)} className ="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 2">2</button>
@@ -129,7 +130,7 @@ const Request = () => {
                                     <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
                                     onClick={() => handlePageChange('next')}
                                     >
-                                    <FaArrowRight className= 'flex text-red-500'/>
+                                    <FaArrowRight className= 'flex text-purple-700'/>
                                     </button>
                             </div>
                         </div>

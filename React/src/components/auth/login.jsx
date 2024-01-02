@@ -19,16 +19,14 @@ function Login(updateState) {
       return alert("Invalid Credentials");
     }
 
-    console.log("data response ", data.response);
-
     if (data.response.role == "instructor") {
-      return navigate("/instructor");
+      return navigate("instructor");
     }
     if(data.response.isBlocked==true){
       return alert("User is Blocked");
     }
     if(data.response.isApproved==true){
-      return navigate("/trainee");;
+      return navigate("trainee");;
     }
     if(data.response.isRequested==true){
       return alert("User has requested already, wait for your approval");

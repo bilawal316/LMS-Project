@@ -10,8 +10,6 @@ const Profile = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [isDimmed, setDimmed] = useState(false);
 
-    const [selectedProfileId, setSelectedProfileId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);  // default page is 1
 
     
 
@@ -60,27 +58,18 @@ const Profile = () => {
             console.error("Error updating Profile:", error);
         }
     }
-
-   const getAllProfiles = async (pageNo) => {
+ 
+   const getAllProfiles = async (userId) => {
         try {
-            setCurrentPage(pageNo);  // Update the currentPage state
-
-            const { data } = await axios.get("http://localhost:3000/user/getAllUsers",{
+            const { data } = await axios.get("http://localhost:3000/user/getUserByUserId",{
                 params: {
-                    role:"instructor",
-                    pageNo: pageNo
+                    userId: userId
                 }
             });
             console.log(data)
+            
             if (data.response) {
-                const formattedProfiles = data.response.map(item => ({
-                    firstName: item.firstName,
-                    lastName: item.lastName,
-                    email: item.email,
-                    role: item.role,
-                    userId: item.userId
-                }));
-                setProfiles(formattedProfiles);
+                setProfiles(data.response);
             }
         } catch (error) {
             console.error("Error fetching Profiles:", error);
@@ -102,12 +91,9 @@ const Profile = () => {
         setModalOpen(true);
         setDimmed(true);
     };
-    const handlePageChange = (direction) => {
-        const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
-        getAllProfiles(newPage);
-      };
+    
     useEffect(() => {
-        void getAllProfiles();
+        void getAllProfiles("0fe8be08-81e1-40f4-9155-bd21244400ec");
     }, []);
 
 
@@ -233,39 +219,39 @@ const Profile = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Profiles.map((Profile, index) => (
+                                    {/* {Profiles.map((Profile, index) => ( */}
 
-                                        <tr key={index} className="border-b border-opacity-20 border-gray-700 bg-white">
+                                        <tr  className="border-b border-opacity-20 border-gray-700 bg-white">
                                             <td className="p-3 border border-gray-300">
-                                                <p>{Profile.firstName}</p>
+                                                <p>{Profiles.firstName}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{Profile.lastName}</p>
+                                                <p>{Profiles.lastName}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{Profile.userId}</p>
+                                                <p>{Profiles.userId}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{Profile.email}</p>
+                                                <p>{Profiles.email}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{Profile.role}
+                                                <p>{Profiles.role}
                                                 </p>
                                             </td>
 
                                             <td className="p-3 border border-gray-300">
 
-                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(Profile)}>                                                <span>Edit</span>
+                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(Profiles)}>                                                <span>Edit</span>
 
                                                 </span>  <span
                                                     className="px-3 py-2 text-white rounded-md bg-red-500 cursor-pointer"
-                                                    onClick={() => handleBlockClick(Profile)} // Pass the Profile object here
+                                                    onClick={() => handleBlockClick(Profiles)} // Pass the Profile object here
                                                 >
                                                     <span>Block</span>
                                                 </span>
                                             </td> 
                                         </tr>
-                                    ))}
+                                    {/* ))} */}
 
                                 </tbody>
                             </table>

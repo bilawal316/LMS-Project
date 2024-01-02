@@ -158,5 +158,25 @@ getAllRequests: async () => {
         error: error,
       };
     }
+  },
+  getUserByUserId: async (query) => {
+    try {
+      const users = await userModel.getUserByUserId(query.userId);
+      if (users.error) {
+        return {
+          error: users.error,
+        };
+      }
+
+      return {
+        response: users.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
   }
-};
+}

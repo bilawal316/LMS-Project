@@ -186,4 +186,22 @@ getAllRequests: async (req, res) => {
         error: error,
       });
     }},
+    getUserByUserId: async (req, res) => {
+  
+      try {
+
+          const users = await userService.getUserByUserId(req.query);
+        if (users.error) {
+          return res.send({
+            error: users.error,
+          });
+        }
+        return res.send({
+          response: users.response,
+        });
+      } catch (error) {
+        return res.send({
+          error: error,
+        });
+      }}
 }
