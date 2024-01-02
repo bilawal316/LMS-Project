@@ -152,5 +152,21 @@ module.exports = {
       };
     }
   },
-    
+  getSession: async (userId) => {
+    try {
+      const session = await authModel.getSession(userId);
+      if (session.error || !session.response) {
+        return {
+          error: session.error,
+        };
+      }
+      return {
+        response: true,
+      };
+    } catch (error) {
+      return {
+        error: error,
+      };
+    }
+  },
     }

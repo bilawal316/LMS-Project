@@ -203,5 +203,23 @@ getAllRequests: async (req, res) => {
         return res.send({
           error: error,
         });
-      }}
+      }},
+      getSession: async (req, res) => {
+        try {
+          const userId = req.cookies.auth.userId;
+          const session = await authService.getSession(userId);
+          if (session.error) {
+            res.send({
+              error: session.error,
+            });
+          }
+          res.send({
+            response: session.response,
+          });
+        } catch (error) {
+          res.send({
+            error: error,
+          });
+        }
+      },
 }

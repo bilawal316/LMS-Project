@@ -14,7 +14,6 @@ Sessions.init({
     }
 },{
     sequelize,
-    timestamps: true,
     modelName: "sessions"
 })
 

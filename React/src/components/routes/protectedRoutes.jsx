@@ -1,14 +1,28 @@
-import React from 'react';
-import Login from "../auth/login";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
+function ProtectedRoute({ children }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-const ProtectedRoutes = (props) => {
-  const isAuthenticated  = false;
+  const getSession = async () => {
+    const { data } = await axios.get("http://localhost:3000/auth/getsession", {
+      withCredentials: true,
+    });
 
-  return isAuthenticated ? (
-    props.children
-  ) : <Navigate to="/login" />
+    data.error ? setIsLoggedIn(false) : setIsLoggedIn(true);
+  };
+
+  useEffect(() => {
+    void getSession();
+  }, []); 
+
+  return <>{isLoggedIn != true ? <Navigate to="/" replace /> : children}</>;
+}
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
-export default ProtectedRoutes;
+export default ProtectedRoute;

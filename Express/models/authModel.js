@@ -75,4 +75,21 @@ module.exports = {
         };
       }
       },
+      getSession: async (userId) => {
+        try {
+          const session = await models.Sessions.findOne({
+            where: {
+              userId: userId,
+            },
+          });
+    
+          return {
+            response: session,
+          };
+        } catch (error) {
+          return {
+            error: error,
+          };
+        }
+      }
 }

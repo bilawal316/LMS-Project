@@ -14,27 +14,29 @@ repeat_password: joi.ref('password')
 })
 
 module.exports ={
-    login : async(req, res) => {
-        try{
-            const validate = await loginSchema.validateAsync(req.body);
-            const loginResponse = await authService.login(validate);
-            if(loginResponse.error){
-               return res.send({
-                    error: loginResponse.error,
-                });
-            }
-            
-            res.cookie("auth", loginResponse.response);
+    login: async (req, res) => {
+        try {
+          const validate = await loginSchema.validateAsync(req.body);
+          const loginResponse = await authService.login(validate);
+          if (loginResponse.error) {
             return res.send({
-                response: loginResponse.response,
-            });        
-        }
-        catch(error){
-            return res.send({
-                error: error,
+              error: loginResponse.error,
             });
+          }
+    
+          res.cookie("auth", loginResponse.response, {
+            maxAge: 60 * 60 * 1000,
+          });
+    
+          return res.send({
+            response: loginResponse.response,
+          });
+        } catch (error) {
+          return res.send({
+            error: error,
+          });
         }
-    },
+      },
     logout: async (req, res) => {
         try {
           const userId = req.user.userId;    
@@ -111,4 +113,22 @@ module.exports ={
             });
         }
     },
+    getSession: async (req, res) => {
+        try {
+          const userId = req.cookies.auth.userId;
+          const session = await authService.getSession(userId);
+          if (session.error) {
+            res.send({
+              error: session.error,
+            });
+          }
+          res.send({
+            response: session.response,
+          });
+        } catch (error) {
+          res.send({
+            error: error,
+          });
+        }
+      },
 }

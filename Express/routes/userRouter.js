@@ -3,7 +3,7 @@ const { trainee, instructor, admin } = require("../middleware");
 const router = require("express").Router();
 
 
-router.post("/createUser", userController.createUser);
+router.post("/createUser", instructor, userController.createUser);
 router.get("/getAllUsers",userController.getAllUsers);
 router.get("/getUserByUserId",userController.getUserByUserId);
 router.get("/getAllRequests",userController.getAllRequests);

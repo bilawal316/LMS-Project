@@ -9,6 +9,8 @@ function Login(updateState) {
 
   const login = async (e) => {
     e.preventDefault();
+        console.log("email", email);
+        console.log("password", password);
 
     const { data } = await axios.post("http://localhost:3000/auth/login", {
       email,

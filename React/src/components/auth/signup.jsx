@@ -26,7 +26,11 @@ console.log(role)
             password,
             confirmPassword,
             role
-        })
+        },
+        {
+            withCredentials: true,
+          }
+        )
 
         console.log("Signup reponse", data)
         if (data.error) {

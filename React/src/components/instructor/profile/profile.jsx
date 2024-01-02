@@ -93,7 +93,7 @@ const Profile = () => {
     };
     
     useEffect(() => {
-        void getAllProfiles("0fe8be08-81e1-40f4-9155-bd21244400ec");
+        void getAllProfiles("bd63d4e2-eca0-4eca-879a-f55684d916ae");
     }, []);
 
 
