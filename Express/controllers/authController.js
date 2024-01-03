@@ -114,6 +114,7 @@ module.exports ={
         }
     },
     getSession: async (req, res) => {
+      console.log("Bilawal")
         try {
           const userId = req.cookies.auth.userId;
           const session = await authService.getSession(userId);
