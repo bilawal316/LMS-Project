@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoutes({ children }) {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getSession = async () => {
@@ -16,13 +17,13 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     void getSession();
-  }, []); 
+  }, []);   
 
-  return <>{isLoggedIn != true ? <Navigate to="/" replace /> : children}</>;
+  return <>{isLoggedIn != true ? <Navigate to="" replace /> : children}</>;
 }
 
-ProtectedRoute.propTypes = {
+ProtectedRoutes.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default ProtectedRoute;
+export default ProtectedRoutes;
