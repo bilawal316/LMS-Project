@@ -257,5 +257,24 @@ getAllRequests: async (req, res) => {
                   error: error
               });
           };
+      },
+  
+  getAllTeams: async (req, res) => {
+    try {
+      // const validate = await paginationSchema.validateAsync(req.query);
+        const teams = await userService.getAllTeams();
+      if (teams.error) {
+        return res.send({
+          error: teams.error,
+        });
       }
+      return res.send({
+        response: teams.response,
+      });
+    } catch (error) {
+      return res.send({
+        error: error,
+      });
+    };
+}
 }
