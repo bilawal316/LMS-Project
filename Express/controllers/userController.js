@@ -239,7 +239,7 @@ getAllRequests: async (req, res) => {
           });
         }},
 
-        createTeam: async (req, res) => {
+        createTeams: async (req, res) => {
           try {
               const team = await userService.createTeams(req.body);
               if (team.error) {
