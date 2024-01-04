@@ -86,22 +86,15 @@ module.exports = {
               order: [[query.sortValue, query.sortOrder]],
               offset: offset,
               limit: query.limit,
-
-
-
-
           })
           return {
               response: users,
           };
-
-
       } catch (error) {
           return {
               error: error,
           };
       }
-
   },
     deleteUser: async (query) => {
       try {
@@ -209,7 +202,8 @@ isLoggedIn: async (email) => {
       }
     }
     },
-    getAllRequests: async () => {
+    getAllRequests: async (query) => {
+
       try {
           
           const users = await models.Users.findAll({
@@ -218,11 +212,13 @@ isLoggedIn: async (email) => {
                   exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
               },
               where:{
-                isRequested: true,
-                isApproved: false,
-                isBlocked: false
+                isRequested:true,
+                isApproved:false,
+                isBlocked:false,
+                role: query.role
               }
             })
+            console.log("users",users)
           return {
               response: users,
           };
@@ -232,5 +228,31 @@ isLoggedIn: async (email) => {
           };
       }
 
-  },  
+  },
+  getTotalTrainees: async () => {
+    try {
+      const trainees = await models.Users.findAll({
+        attributes: {
+          exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+        },
+        where: {
+          role: 'trainee',
+        },
+      });
+  
+      const totalTrainees = trainees.length;
+  
+      return {
+        response: {
+          totalTrainees: totalTrainees,
+          traineeList: trainees,
+        },
+      };
+  
+    } catch (error) {
+      return {
+        error: error,
+      };
+    }
+  }    
 }

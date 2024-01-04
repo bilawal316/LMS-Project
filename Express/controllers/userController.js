@@ -93,15 +93,15 @@ getAllUsers: async (req, res) => {
     };
 },
 getAllRequests: async (req, res) => {
-  console.log("Bilawal")
   try {
-      const users = await userService.getAllRequests();
+      const users = await userService.getAllRequests(req.query);
       if (users.error) {
           return res.send({
               error: users.error,
           });
 
       }
+  
       return res.send({
           response: users.response,
       });
@@ -222,4 +222,20 @@ getAllRequests: async (req, res) => {
           });
         }
       },
+      getTotalTrainees: async (req, res) => {
+        try {
+            const users = await userService.getTotalTrainees();
+          if (users.error) {
+            return res.send({
+              error: users.error,
+            });
+          }
+          return res.send({
+            response: users.response,
+          });
+        } catch (error) {
+          return res.send({
+            error: error,
+          });
+        }},
 }

@@ -59,10 +59,11 @@ module.exports = {
   }
 
 },
-getAllRequests: async () => {
+getAllRequests: async (query) => {
   try {
+      const users = await userModel.getAllRequests(query);
+console.log("service===",users)
 
-      const users = await userModel.getAllRequests();
       if (users.error) {
           return {
               error: users.error,
@@ -70,7 +71,6 @@ getAllRequests: async () => {
       } return {
           response: users.response,
       };
-
 
   } catch (error) {
       return {
@@ -178,5 +178,25 @@ getAllRequests: async () => {
         error: error,
       };
     }
-  }
+  },
+  getTotalTrainees: async () => {
+    try {
+      const users = await userModel.getTotalTrainees();
+      if (users.error) {
+        return {
+          error: users.error,
+        };
+      }
+
+      return {
+        response: users.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
+  },
 }

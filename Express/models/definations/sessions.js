@@ -10,6 +10,7 @@ Sessions.init({
     },
     token: {
         type: DataTypes.STRING(1000),
+        unique: true,
         allowNull: false,
     }
 },{

@@ -77,12 +77,14 @@ module.exports = {
       },
       getSession: async (userId) => {
         try {
+          // console.log("mod  ",userId)
+          
           const session = await models.Sessions.findOne({
             where: {
               userId: userId,
             },
           });
-    
+
           return {
             response: session,
           };

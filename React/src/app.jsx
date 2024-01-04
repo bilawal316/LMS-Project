@@ -5,7 +5,7 @@ import Instructor_layout from "./components/layout/instructor_layout";
 import Onboarding from './components/auth/onboarding';
 import './index.css';
 import Trainee_layout from './components/layout/trainee_layout';
-import ProtectedRoutes from '../src/middleware';
+// import ProtectedRoutes from '../src/middleware';
 
 const App = () => {
   return (
@@ -15,9 +15,9 @@ const App = () => {
       <Route
         path="/instructor"
         element={
-          <ProtectedRoutes>
-            <Route index element={<Instructor_layout />} />
-          </ProtectedRoutes>
+            // <ProtectedRoutes>
+            <Instructor_layout />
+          // </ProtectedRoutes>
         }
       />
       <Route path="/trainee" element={<Trainee_layout />} />

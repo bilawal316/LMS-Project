@@ -34,11 +34,11 @@ function classNames(...classes) {
 
 function Sidebar(props) {
   return (
-    <>
-      {/* Static sidebar for desktop */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    
+      // Static sidebar for desktop
+      <div className="  hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-1/5 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5  bg-[#efebea] px-6 pb-4">
+          <div className="flex pl-5 flex-col gap-y-5  bg-[#efebea]  w-full h-full">
             <div className="flex h-16 shrink-0 items-center">
               {/* <img
                 className="h-8 w-auto"
@@ -108,8 +108,7 @@ function Sidebar(props) {
             </nav>
           </div>
         </div>
-     
-    </>
+  
   );
 }
 

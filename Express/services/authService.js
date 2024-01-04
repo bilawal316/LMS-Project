@@ -26,8 +26,8 @@ module.exports = {
             const token = jwt.sign(user.response.dataValues, config.jwt.secret, {
                 expiresIn: "1h"
             })
-            const session = await sessionModel.getSessionByUserId(user.response.dataValues.userId)
-            // if(session.error) {return {error: error "invalid user"}
+            const session = await sessionModel.getSessionByUserId(user.response.dataValues.userId);
+            if(session.error) {return {error:"invalid user"}};
             const userId =  user.response.dataValues.userId
             const deleteSession = await sessionModel.deleteSession(userId)
             if(deleteSession.error){
@@ -42,13 +42,20 @@ module.exports = {
                 sessionId,
                 userId,
                 token)
+
       if(createSession.error || !createSession.response){
         return { error: 'invalid user 234'}
       }
 
-           
+      const Session = createSession.response.dataValues;
+      Session.role = user.response.dataValues.role;
+      Session.isRequested = user.response.dataValues.isRequested;
+      Session.isApproved = user.response.dataValues.isApproved;
+      Session.isBlocked = user.response.dataValues.isBlocked;
+
+
             return {
-                response: user.response,
+                response: Session,
             };
          } catch (error){
                 return {
@@ -129,44 +136,23 @@ module.exports = {
                                 };
                             }
                         },
-    logout: async (email) => {
-    try {
-      // Check if the user is logged in before updating the status
-      const isLoggedInResult = await userModel.isLoggedIn(email);
-
-      if (isLoggedInResult.response) {
-        // User is logged in, proceed with logout
-        await models.Users.update({ isLoggedIn: false }, { where: { email } });
-
-        return {
-          response: `User with email ${email} is logged out`,
-        };
-      } else {
-        return {
-          error: `User with email ${email} is not logged in`,
-        };
-      }
-    } catch (error) {
-      return {
-        error: error,
-      };
-    }
-  },
-  getSession: async (userId) => {
-    try {
-      const session = await authModel.getSession(userId);
-      if (session.error || !session.response) {
-        return {
-          error: session.error,
-        };
-      }
-      return {
-        response: true,
-      };
-    } catch (error) {
-      return {
-        error: error,
-      };
-    }
-  },
+                        getSession: async (userId) => {
+                          try {
+                            // console.log("serUserId  ",userId)
+                            const session = await authModel.getSession(userId);
+                            // console.log("ser",session.response)
+                            if (session.error || !session.response) {
+                              return {
+                                error: session.error,
+                              };
+                            }
+                            return {
+                              response: session.response,
+                            };
+                          } catch (error) {
+                            return {
+                              error: error,
+                            };
+                          }
+                        },
     }

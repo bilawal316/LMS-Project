@@ -15,8 +15,11 @@ function Login(updateState) {
     const { data } = await axios.post("http://localhost:3000/auth/login", {
       email,
       password,
+    },
+    {
+      withCredentials:true,
     });
-
+    console.log("bilawal", data)
     if (data.error) {
       return alert("Invalid Credentials");
     }

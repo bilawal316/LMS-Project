@@ -23,7 +23,6 @@ module.exports ={
               error: loginResponse.error,
             });
           }
-    
           res.cookie("auth", loginResponse.response, {
             maxAge: 60 * 60 * 1000,
           });
@@ -37,27 +36,36 @@ module.exports ={
           });
         }
       },
-    logout: async (req, res) => {
-        try {
-          const userId = req.user.userId;    
-          const logoutResponse = await authService.logout(userId);
-    
-          if (logoutResponse.error) {
-            return res.send({
-              error: logoutResponse.error,
-            });
-          }
-          res.clearCookie("auth");
-    
-          return res.send({
-            response: logoutResponse.response,
-          });
-        } catch (error) {
-          return res.send({
-            error: error,
-          });
-        }
-      },
+    logout: async (req, res) => {  
+  try {
+    // Assuming that the user ID is stored in req.user.userId
+    const userId = req.user ? req.user.userId : null;
+
+    if (!userId) {
+      return res.send({
+        error: "User ID not found in the request.",
+      });
+    }
+
+    const logoutResponse = await authService.logout(userId);
+
+    if (logoutResponse.error) {
+      return res.send({
+        error: logoutResponse.error,
+      });
+    }
+
+    res.clearCookie("auth");
+
+    return res.send({
+      response: logoutResponse.response,
+    });
+  } catch (error) {
+    return res.send({
+      error: error,
+    });
+  }
+},
     signUp : async (req, res) => {
         try{
             const validate = await signUpSchema.validateAsync(req.body);
@@ -114,15 +122,17 @@ module.exports ={
         }
     },
     getSession: async (req, res) => {
-      console.log("Bilawal")
-        try {
-          const userId = req.cookies.auth.userId;
+      try {
+        const userId = req.cookies.auth.userId;
+        // console.log("contUserId  ",userId)
           const session = await authService.getSession(userId);
           if (session.error) {
             res.send({
               error: session.error,
             });
           }
+          console.log("cot",session.response)
+
           res.send({
             response: session.response,
           });
@@ -132,4 +142,4 @@ module.exports ={
           });
         }
       },
-}
+};

@@ -3,29 +3,44 @@ import axios from 'axios';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 
 
+function Request() {
 
-const Request = () => {
-  
     const [Requests, setRequests] = useState([]);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
 
     const getAllRequests = async () => {
         try {
-            const { data } = await axios.get("http://localhost:3000/user/getAllRequests");
+            const { data } = await axios.get("http://localhost:3000/user/getAllRequests",{
+              params:{
+                role:"trainee"
+
+              }  
+            });
+            setData(data);
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
             if (data.response) {
                 const formattedRequests = data.response.map(item => ({
                     firstName: item.firstName,
                     lastName: item.lastName,
                     email: item.email,
-                    userId: item.userId,
-                    cohort:item.cohort
+                    userId: item.userId
                 }));
                 setRequests(formattedRequests);
             }
+          
         } catch (error) {
-            console.error("Error fetching requests:", error);
+            setLoading(false);
+
         }
     };
+        getAllRequests(1);
+
+    }, []); 
 
     const approveRequest = async (userId) => {
         try {
@@ -38,17 +53,12 @@ const Request = () => {
             });
             // If successful, remove the approved request from the frontend
             setRequests(prevRequests => prevRequests.filter(request => request.userId !== userId));
-            alert("Your request has been approved successfully");
+            alert("The request has been approved successfully");
         } catch (error) {
             console.error("Error approving request:", error);
             alert("Failed to approve request. Please try again.");
         }
     };
-
-    useEffect(() => {
-        void getAllRequests();
-    }, []);
-
 
   return (
     <>

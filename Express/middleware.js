@@ -1,92 +1,85 @@
 const jwt = require("jsonwebtoken");
 const config = require("./config/config.json")
-const getSession = require ("./models/sessionModel");
 const sessionModel = require("./models/sessionModel");
 
 
 module.exports = {
-    trainee: async (req, res, next) => {
-        try {
-          const token = req.cookies.auth;
-          if (!token || token == undefined) {
-            return res.send({
-              error: "unauthorized User",
-            });
-          }
+  trainee: async (req, res, next) => {
+    try {
+      const token = req.cookies.auth;
 
-          jwt.verify(token, config.jwt.secret, async (error, user,) => {
-            if (error) {
-              return res.send({
-                error: error,
-              });
-            }
-              if (user.role !== "trainee") {
-              return res.send({
-                error: "unauthorized User",
-              });
-            }
-            next();
-          });
-        } catch (error) {
-          return res.send({
-            error: "unauthorized User",
-          });
-        }
-      },
-      instructor: async (req, res, next) => {
-        try {
-          const token = req.cookies.auth;
-          if (!token || token == undefined) {
-            return res.send({
-              error: "unauthorized User",
-            });
-          }
-          jwt.verify(token, config.jwt.secret, async (error, user) => {
-            if (error) {
-              return res.send({
-                error: error,
-              });
-            }
-            console.log(user.role);
-            if (user.role !== "instructor") {
-              return res.send({
-                error: "unauthorized User",
-              });
-            }
-            next();
-          });
-        } catch (error) {
-          return res.send({
-            error: "unauthorized User",
-          });
-        }
-      },
-      auth: async (req, res, next) => {
-  try {
-    const token = req.cookies.auth;
-
-    if (token) {
+      if (!token || token == undefined) {
+        return res.send({
+          error: "unauthorized User",
+        });
+      }
       jwt.verify(token, config.jwt.secret, async (error, user) => {
-        if (user) {
-          const session = await sessionModel.getSessionByUserId(user.userId);
+        if (error) {
+          return res.send({
+            error: error,
+          });
+        }
 
-          if (session.response) {
-            return res.json({
-              error: "already signed in ",
-            });
-          }
+        const session = await sessionModel.getSession(user.userId, token);
+
+        if (session.error || !session.response) {
+          return res.send({
+            error: "unauthorized User",
+          });
+        }
+        if (user.role !== "trainee") {
+          return res.send({
+            error: "unauthorized User",
+          });
         }
         next();
       });
-    } else {
-      next();
+    } catch (error) {
+      return res.send({
+        error: "unauthorized User",
+      });
     }
-  } catch (error) {
-    return res.send({
-      error: "unauthorized User",
-    });
-  }
-},
+  },
+
+  instructor: async (req, res, next) => {
+    try {
+      console.log("cookies ", req.cookies);
+      const token = req.cookies.auth.token;
+
+      if (!token || token == undefined) {
+        return res.send({
+          error: "unauthorized User",
+        });
+      }
+      jwt.verify(token, config.jwt.secret, async (error, user) => {
+        console.log("user ", user);
+        if (error) {
+          return res.send({
+            error: error,
+          });
+        }
+
+        const session = await sessionModel.getSession(user.userId, token);
+
+        if (session.error || !session.response) {
+          return res.send({
+            error: "unauthorized User",
+          });
+        }
+
+        if (user.role !== "instructor") {
+          return res.send({
+            error: "unauthorized User",
+          });
+        }
+        next();
+      });
+    } catch (error) {
+      return res.send({
+        error: "unauthorized User",
+      });
+    }
+  },
 admin: async (req, res, next) => {
   try {
     const token = req.cookies.auth;
