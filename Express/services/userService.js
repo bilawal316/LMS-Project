@@ -227,5 +227,25 @@ console.log("service===",users)
             error: error,
         };
     }
-}
+},
+   getAllTeams: async () => {
+    try {
+      const teams = await userModel.getAllTeams();
+      if (teams.error) {
+        return {
+          error: teams.error,
+        };
+      }
+
+      return {
+        response: teams.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
+  }
 }
