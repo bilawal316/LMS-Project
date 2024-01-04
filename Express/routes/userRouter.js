@@ -13,5 +13,8 @@ router.put("/updateUser",userController.updateUser);
 router.post("/onbaording",  userController.onBoarding);
 router.get("/gettotaltrainees",  userController.getTotalTrainees);
 router.post("/createTeams",userController.createTeams);
+router.get("/getAllTeams", userController.getAllTeams);
+
+
 
 module.exports = router;
