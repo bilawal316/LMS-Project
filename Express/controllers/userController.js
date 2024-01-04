@@ -242,7 +242,7 @@ getAllRequests: async (req, res) => {
         createTeam: async (req, res) => {
           try {
               const team = await userService.createTeams(req.body);
-              if (user.error) {
+              if (team.error) {
                   return res.send({
                       error: team.error,
                   })
