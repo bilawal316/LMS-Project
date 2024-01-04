@@ -22,19 +22,61 @@ const TraineeNum = () => {
   }, []);
 
   return (
-    // <div className='w-full px-80 p-8 bg-slate-700'>
-    <div className="w-62  h-10 rounded-lg shadow-md text-center bg-slate-700">
-      h
-      {/* <div className='flex'>
-      <UsersIcon className='text-purple-700'style={{ width: '40px', height: '40px' }}/>
+    <>
+    <div className="w-full lg:w-1/5 p-4 mx-auto my-6 bg-indigo-200 rounded-lg shadow-md">
+      <div className="text-center">
+      <div className='flex'>
+      <UsersIcon className='text-purple-700' style={{ width: '40px', height: '40px' }} />
         <h2 className="text-3xl font-semibold text-purple-500 mb-4">Trainee List</h2>
-        </div> */}
-        {/* <div className="bg-purple-700 p-6 rounded-lg">
-          <p className="flex text-lg font-medium text-white">
-            Total Trainees: {totalTrainees}</p>
-        </div> */}
+        </div>
+        <div className="bg-white p-6 rounded-lg">
+          {/* Set the size of the icon here */}
+          {/* Rest of your content */}
+          <p className="text-lg font-medium text-gray-800">Total Trainees: {totalTrainees}</p>
+        </div>
       </div>
-      // </div>
+    </div>
+      <div className="w-full lg:w-1/5 p-4 mx-auto my-6 bg-indigo-200 rounded-lg shadow-md">
+      <div className="text-center">
+      <div className='flex'>
+      <UsersIcon className='text-purple-700' style={{ width: '40px', height: '40px' }} />
+        <h2 className="text-3xl font-semibold text-purple-500 mb-4">Trainee List</h2>
+        </div>
+        <div className="bg-white p-6 rounded-lg">
+          {/* Set the size of the icon here */}
+          {/* Rest of your content */}
+          <p className="text-lg font-medium text-gray-800">Total Trainees: {totalTrainees}</p>
+        </div>
+      </div>
+      
+    </div>
+    <div className="w-full lg:w-1/5 p-4 mx-auto my-6 bg-indigo-200 rounded-lg shadow-md">
+      <div className="text-center">
+      <div className='flex'>
+      <UsersIcon className='text-purple-700' style={{ width: '40px', height: '40px' }} />
+        <h2 className="text-3xl font-semibold text-purple-500 mb-4">Trainee List</h2>
+        </div>
+        <div className="bg-white p-6 rounded-lg">
+          {/* Set the size of the icon here */}
+          {/* Rest of your content */}
+          <p className="text-lg font-medium text-gray-800">Total Trainees: {totalTrainees}</p>
+        </div>
+      </div>
+    </div>
+    <div className="w-full lg:w-1/5 p-4 mx-auto my-6 bg-indigo-200 rounded-lg shadow-md">
+      <div className="text-center">
+      <div className='flex'>
+      <UsersIcon className='text-purple-700' style={{ width: '40px', height: '40px' }} />
+        <h2 className="text-3xl font-semibold text-purple-500 mb-4">Trainee List</h2>
+        </div>
+        <div className="bg-white p-6 rounded-lg">
+          {/* Set the size of the icon here */}
+          {/* Rest of your content */}
+          <p className="text-lg font-medium text-gray-800">Total Trainees: {totalTrainees}</p>
+        </div>
+      </div>
+    </div>
+    </>
   );
 };
 

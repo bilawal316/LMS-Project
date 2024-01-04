@@ -12,6 +12,6 @@ router.delete("/deleteUser", instructor, userController.deleteUser);
 router.put("/updateUser",userController.updateUser);
 router.post("/onbaording",  userController.onBoarding);
 router.get("/gettotaltrainees",  userController.getTotalTrainees);
-
+router.post("/createTeam",userController.createTeam);
 
 module.exports = router;

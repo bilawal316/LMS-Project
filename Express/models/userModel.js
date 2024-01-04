@@ -254,5 +254,42 @@ isLoggedIn: async (email) => {
         error: error,
       };
     }
-  }    
+  },
+  createTeams: async (body, teamsId) => {
+    try {
+        const team = await models.Teams.create({
+          teamsId,
+            ...body
+        })
+        return {
+          
+            response: team,
+            
+        };
+        
+    } catch (error) {
+        return {
+            error: error,
+        };
+    }
+},
+
+getTeamByTeamId: async (teamId) => {
+  try {     
+    const team = await models.Teams.findOne({
+      where: {
+        teamId: teamId,
+    }
+  });
+  return{
+    response: team
+  }
+  } catch (error) {
+
+    return {
+      error: error
+    } 
+  }
+}
+
 }

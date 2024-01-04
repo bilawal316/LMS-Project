@@ -238,4 +238,24 @@ getAllRequests: async (req, res) => {
             error: error,
           });
         }},
+
+        createTeam: async (req, res) => {
+          try {
+              const team = await userService.createTeams(req.body);
+              if (user.error) {
+                  return res.send({
+                      error: team.error,
+                  })
+              }
+              return res.send({
+                  response: team.response,
+              });
+      
+          }
+          catch (error) {
+              return res.send({
+                  error: error
+              });
+          };
+      }
 }

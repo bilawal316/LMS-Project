@@ -38,7 +38,9 @@ module.exports = {
             error: error,
         };
     }
-},getAllUsers: async (query) => {
+},
+
+getAllUsers: async (query) => {
   try {
       const offset = (query.pageNo - 1) * query.limit;
       console.log(offset)
@@ -199,4 +201,31 @@ console.log("service===",users)
       };
     }
   },
+  createTeams: async (body) => {
+    try {
+        const isTeams = await userModel.getTeamByTeamId(body.teamsId);
+
+        
+        if (isTeams.response || isTeams.error) {
+            return {
+                error: "Team already exists",
+            }
+        }
+        const team = await userModel.createTeams(body, teamsId);
+
+        if (user.error) {
+            return {
+                error: team.error,
+            }
+        }
+        return {
+            response: team.response,
+        }
+    }
+    catch (error) {
+        return {
+            error: error,
+        };
+    }
+}
 }

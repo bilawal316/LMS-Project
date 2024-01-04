@@ -26,13 +26,12 @@ const Instructor_layout = () => {
   return (
     <div>
         <div className=" w-screen h-screen flex flex-col bg-[#efebea]">
-          <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />
-          </div>
-          <div className="h-full w-4/5 flex flex-col bg-red-700">
-            <div className="w-1/5 bg-blue-500">
+          <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />          
+            <div className="flex h-full">
+            <div className="w-1/5">
           <Sidebar updateState={updateState} />
             </div>
-            <div className="w-4/5 bg-yellow-500">
+            <div className="h-full w-4/5">
             {component === "HOME" && <Home sidebarOpen={sidebarOpen} />}
             {component === "PROFILE" && <Profile/> }
             {component === "TEAMS" && <Teams />}
@@ -42,8 +41,8 @@ const Instructor_layout = () => {
             {component === "REPORTS" && <Reports />}
             {component === "REQUEST" && <Request/>}
             </div>
-          </div>
-        
+            </div>
+        </div>
     </div>
   );
 }
