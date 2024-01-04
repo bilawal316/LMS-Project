@@ -290,6 +290,26 @@ getTeamByTeamId: async (teamId) => {
       error: error
     } 
   }
-}
-
+},
+  getAllTeams: async () => {
+    try {
+      const teams = await models.Users.findAll({
+        attributes : ["teamsId", "teamsLeader"]
+      //   attributes: {
+      //     exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+      // },
+      // where: {
+      //   role: 'instructor',
+      // },
+    })
+    return{
+      response: teams,
+    };
+      
+    } catch (error) {
+      return{
+        error: error,
+      }
+    }
+    }
 }
