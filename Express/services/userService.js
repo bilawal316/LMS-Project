@@ -228,6 +228,56 @@ console.log("service===",users)
         };
     }
 },
+  createProjects: async (body) => {
+    try {
+        const isProjects = await userModel.getProjectByProjectId(body.projectsId);
+
+        if (isProjects.response || isProjects.error) {
+            return {
+                error: "Project already exists",
+            }
+        }
+        const project = await userModel.createProjects(body, projectsId);
+        if (project.error) {
+            return {
+                error: project.error,
+            }
+        }
+        return {
+            response: project.response,
+        }
+    }
+    catch (error) {
+        return {
+            error: error,
+        };
+    }
+},
+  createTasks: async (body) => {
+    try {
+        const isTasks = await userModel.getTasksByTasksId(body.tasksId);
+
+        if (isTasks.response || isTasks.error) {
+            return {
+                error: "Tasks already exists",
+            }
+        }
+        const tasks = await userModel.createTasks(body, tasksId);
+        if (user.error) {
+            return {
+                error: tasks.error,
+            }
+        }
+        return {
+            response: tasks.response,
+        }
+    }
+    catch (error) {
+        return {
+            error: error,
+        };
+    }
+},
    getAllTeams: async () => {
     try {
       const teams = await userModel.getAllTeams();
@@ -239,6 +289,47 @@ console.log("service===",users)
 
       return {
         response: teams.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
+  },
+
+getAllProjects: async () => {
+    try {
+      const projects = await userModel.getAllProjects();
+      if (projects.error) {
+        return {
+          error: projects.error,
+        };
+      }
+
+      return {
+        response: project.response,
+      };
+    } catch (error) {
+      console.log(error)
+
+      return {
+        error: error,
+      };
+    }
+  },
+getAllTasks: async () => {
+    try {
+      const tasks = await userModel.getAllTasks();
+      if (tasks.error) {
+        return {
+          error: tasks.error,
+        };
+      }
+
+      return {
+        response: tasks.response,
       };
     } catch (error) {
       console.log(error)
