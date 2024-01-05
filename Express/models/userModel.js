@@ -274,7 +274,7 @@ isLoggedIn: async (email) => {
     }
 },
 
-getTeamByTeamId: async (teamId) => {
+getTeamByTeamId: async (teamsId) => {
   try {     
     const team = await models.Teams.findOne({
       where: {
@@ -304,6 +304,63 @@ getTeamByTeamId: async (teamId) => {
     })
     return{
       response: teams,
+    };
+      
+    } catch (error) {
+      return{
+        error: error,
+      }
+    }
+    },
+    createProject: async (body, projectsId) => {
+    try {
+        const project = await models.Projects.create({
+          projectsId,
+            ...body
+        })
+        return {
+          
+            response: project,
+            
+        };
+        
+    } catch (error) {
+        return {
+            error: error,
+        };
+    }
+},
+
+getProjectByProjectId: async (projectsId) => {
+  try {     
+    const project = await models.Projects.findOne({
+      where: {
+        projectsId: projectsId,
+    }
+  });
+  return{
+    response: project
+  }
+  } catch (error) {
+
+    return {
+      error: error
+    } 
+  }
+},
+  getAllProjects: async () => {
+    try {
+      const projects = await models.Projects.findAll({
+        attributes : ["projectsId", "projectsTitle", "projectsDescription"]
+      //   attributes: {
+      //     exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+      // },
+      // where: {
+      //   role: 'instructor',
+      // },
+    })
+    return{
+      response: projects,
     };
       
     } catch (error) {
