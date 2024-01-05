@@ -276,41 +276,4 @@ getAllRequests: async (req, res) => {
       });
     };
 }
-  getAllTProjects: async (req, res) => {
-    try {
-      // const validate = await paginationSchema.validateAsync(req.query);
-        const projects = await userService.getAllTProjects();
-      if (projects.error) {
-        return res.send({
-          error: projects.error,
-        });
-      }
-      return res.send({
-        response: projects.response,
-      });
-    } catch (error) {
-      return res.send({
-        error: error,
-      });
-    };
-},
-createProjects: async (req, res) => {
-          try {
-              const projects = await userService.createProjects(req.body);
-              if (projects.error) {
-                  return res.send({
-                      error: projects.error,
-                  })
-              }
-              return res.send({
-                  response: projects.response,
-              });
-      
-          }
-          catch (error) {
-              return res.send({
-                  error: error
-              });
-          };
-      }
 }

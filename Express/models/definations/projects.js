@@ -1,26 +1,29 @@
-const {Model, DataTypes} = require ("sequelize");
-const sequelize = require ("../../bin/dbConnection")
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require("../../bin/dbConnection");
 
-class Projects extends Model {}
-
+class Projects extends Model { }
 Projects.init({
-    projectsId: {
+    projectId: {
         primaryKey: true,
         type: DataTypes.STRING(60),
     },
-    projectsTitle: {
+    title: {
+        type: DataTypes.STRING(60),
+        allowNull: false,
+        unique: true
+    },
+    description: {
         type: DataTypes.STRING(60),
         allowNull: false,
     },
-    projectsDescription: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-    }
-},{
-    sequelize,
-    timestamps: true,
-    paranoid: true,
-    modelName: "Projects"
-})
+
+},
+    {
+        sequelize,
+        timestamps: true,
+        paranoid: true,
+        modelName: "projects"
+
+    });
 
 module.exports = Projects;

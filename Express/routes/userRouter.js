@@ -3,7 +3,7 @@ const { trainee, instructor, admin } = require("../middleware");
 const router = require("express").Router();
 
 
-router.post("/createUser", instructor, userController.createUser);
+router.post("/createUser", userController.createUser);
 router.get("/getAllUsers",userController.getAllUsers);
 router.get("/getUserByUserId",userController.getUserByUserId);
 router.get("/getAllRequests",userController.getAllRequests);
@@ -12,8 +12,6 @@ router.delete("/deleteUser", instructor, userController.deleteUser);
 router.put("/updateUser",userController.updateUser);
 router.post("/onbaording",  userController.onBoarding);
 router.get("/gettotaltrainees",  userController.getTotalTrainees);
-router.post("/createTeams",userController.createTeams);
-router.get("/getAllTeams", userController.getAllTeams);
 
 
 

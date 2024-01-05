@@ -228,31 +228,6 @@ console.log("service===",users)
         };
     }
 },
-  createProjects: async (body) => {
-    try {
-        const isProjects = await userModel.getProjectByProjectId(body.projectsId);
-
-        if (isProjects.response || isProjects.error) {
-            return {
-                error: "Project already exists",
-            }
-        }
-        const project = await userModel.createProjects(body, projectsId);
-        if (project.error) {
-            return {
-                error: project.error,
-            }
-        }
-        return {
-            response: project.response,
-        }
-    }
-    catch (error) {
-        return {
-            error: error,
-        };
-    }
-},
   createTasks: async (body) => {
     try {
         const isTasks = await userModel.getTasksByTasksId(body.tasksId);
@@ -289,27 +264,6 @@ console.log("service===",users)
 
       return {
         response: teams.response,
-      };
-    } catch (error) {
-      console.log(error)
-
-      return {
-        error: error,
-      };
-    }
-  },
-
-getAllProjects: async () => {
-    try {
-      const projects = await userModel.getAllProjects();
-      if (projects.error) {
-        return {
-          error: projects.error,
-        };
-      }
-
-      return {
-        response: project.response,
       };
     } catch (error) {
       console.log(error)
