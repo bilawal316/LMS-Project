@@ -368,5 +368,63 @@ getProjectByProjectId: async (projectsId) => {
         error: error,
       }
     }
+    },
+
+createTasks: async (body, tasksId) => {
+    try {
+        const tasks = await models.Tasks.create({
+          tasksId,
+            ...body
+        })
+        return {
+          
+            response: tasks,
+            
+        };
+        
+    } catch (error) {
+        return {
+            error: error,
+        };
+    }
+},
+
+getTasksByTasksId: async (tasksId) => {
+  try {     
+    const tasks = await models.Tasks.findOne({
+      where: {
+        tasksId: tasksId,
+    }
+  });
+  return{
+    response: tasks
+  }
+  } catch (error) {
+
+    return {
+      error: error
+    } 
+  }
+},
+  getAllTasks: async () => {
+    try {
+      const tasks = await models.Tasks.findAll({
+        attributes : ["tasksId", "tasksTitle", "tasksDescription"]
+      //   attributes: {
+      //     exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+      // },
+      // where: {
+      //   role: 'instructor',
+      // },
+    })
+    return{
+      response: tasks,
+    };
+      
+    } catch (error) {
+      return{
+        error: error,
+      }
+    }
     }
 }
