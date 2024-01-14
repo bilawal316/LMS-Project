@@ -36,10 +36,10 @@ function Sidebar(props) {
   return (
     
       // Static sidebar for desktop
-      <div className="  hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-1/5 lg:flex-col">
+      <div className=" lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-1/5 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex pl-5 flex-col gap-y-5  bg-[#efebea]  w-full h-full">
-            <div className="flex h-16 shrink-0 items-center">
+            <div className="flex pt-4 shrink-0 items-center">
               {/* <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"

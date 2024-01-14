@@ -34,7 +34,7 @@ const Onboarding = (updateState) => {
       instructorId: instructor,
       userId
     });
-    console.log("data ", data);
+
 
     // Update state to indicate that the request has been sent
     setRequestSent(true);

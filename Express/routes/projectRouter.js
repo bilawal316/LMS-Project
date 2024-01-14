@@ -4,6 +4,6 @@ const router = require("express").Router();
 router.post("/createProject", projectController.createProject);
 router.get("/getAllProjects", projectController.getAllProjects);
 router.put("/updateProject", projectController.updateProject);
-
+router.get("/getTotalProjects", projectController.getTotalProjects);
 
 module.exports = router;

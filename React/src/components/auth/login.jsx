@@ -9,26 +9,24 @@ function Login(updateState) {
 
   const login = async (e) => {
     e.preventDefault();
-        console.log("email", email);
-        console.log("password", password);
-
-    const { data } = await axios.post("http://localhost:3000/auth/login", {
+    const { data } = await axios.post("http://localhost:3000/auth/login", 
+    {
       email,
       password,
     },
     {
       withCredentials:true,
     });
-    console.log("bilawal", data)
     if (data.error) {
       return alert("Invalid Credentials");
     }
 
     if (data.response.role == "instructor") {
+
       return navigate("instructor");
     }
     if(data.response.isBlocked==true){
-      return alert("User is Blocked");
+      return alert("Your Request is Blocked, Please contact the office");
     }
     if(data.response.isApproved==true){
       return navigate("trainee");;
@@ -36,14 +34,14 @@ function Login(updateState) {
     if(data.response.isRequested==true){
       return alert("User has requested already, wait for your approval");
     }
-
+    console.log("data", data)
     navigate("onboarding", { state: { userId: data.response.userId } });
     return alert("Logged in Successfully");
   };
 
   return (
     <div>
-      <div className="flex overflow-x-hidden">
+      <div className="flex overflow-x-hidden ">
         <img
           src={window.location.origin + '/login.png'}
           className="bg-[#efebea] max-h-screen"

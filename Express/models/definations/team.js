@@ -1,14 +1,18 @@
 const {Model, DataTypes} = require ("sequelize");
 const sequelize = require ("../../bin/dbConnection")
 
-class Teams extends Model {}
+class Team extends Model {}
 
-Teams.init({
+Team.init({
     teamsId: {
         primaryKey: true,
         type: DataTypes.STRING(60),
     },
-    teamsLeader: {
+    title: {
+        type: DataTypes.STRING(60),
+        allowNull: true,
+        },
+    teamsLeaderId: {
         type: DataTypes.STRING(60),
         allowNull: false,
         }
@@ -16,7 +20,7 @@ Teams.init({
     sequelize,
     timestamps: true,
     paranoid: true,
-    modelName: "Teams"
+    modelName: "Team"
 })
 
-module.exports = Teams;
+module.exports = Team;

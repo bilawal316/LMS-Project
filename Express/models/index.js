@@ -1,6 +1,6 @@
 const sequelize = require ("../bin/dbConnection");
 const Users = require("./definations/users");
-const Teams = require("./definations/teams");
+const Team = require("./definations/team");
 const Projects = require("./definations/projects");
 const Tasks = require("./definations/tasks");
 const TeamMembers = require("./definations/teamMembers");
@@ -8,14 +8,14 @@ const Sessions = require("./definations/sessions")
 
 
 const models = { 
-    Users, Teams, Projects, Tasks , TeamMembers, Sessions
+    Users, Team, Projects, Tasks , TeamMembers, Sessions
 };
 
 //relations
 
 //team-projects one-to-one 
-Teams.hasOne(Projects , {foreignKey: "TeamsId"});
-Projects.belongsTo(Teams, {foreignKey: "TeamsId"});
+Team.hasOne(Projects , {foreignKey: "TeamId"});
+Projects.belongsTo(Team, {foreignKey: "TeamId"});
 
 //users-sessions one-to-one 
 Users.hasOne(Sessions , {foreignKey: "userId"});
@@ -29,17 +29,23 @@ Tasks.belongsTo(Projects, {foreignKey: "ProjectId"});
 TeamMembers.hasMany(Tasks , {foreignKey: "TasksId"});
 Tasks.belongsTo(TeamMembers, {foreignKey: "TasksId"});
 
-//Users-TeamMember one-to-many
-Users.hasMany(TeamMembers, { foreignKey: "UsersId" });
-TeamMembers.belongsTo(Users, { foreignKey: "UsersId" });
+//User-TeamMember one-to-many
+Users.hasMany(TeamMembers, { foreignKey: "UserId" });
+TeamMembers.belongsTo(Users, { foreignKey: "UserId" });
 
 //TeamMember-teams one-to-many
-Teams.hasMany(TeamMembers , {foreignKey: "TeamsId"});
-TeamMembers.belongsTo(Teams, {foreignKey: "TeamId"});
+Team.hasMany(TeamMembers , {foreignKey: "TeamsId"});
+TeamMembers.belongsTo(Team, {foreignKey: "TeamsId"});
 
 //users-teams one-to-many (user as a instructor)
-Users.hasMany(Teams, {foreignKey: "UsersId"});
-Teams.belongsTo(Users, {foreignKey: "UsersId"})
+Users.hasMany(Team, {foreignKey: "instructorId"});
+Team.belongsTo(Users, {foreignKey: "instructorId"})
+
+//Project-teams one-to-many
+Projects.hasMany(Team, {foreignKey: "projectId"});
+Team.belongsTo(Projects, {foreignKey: "projectId"})
+
+Users.hasMany(Users,{foreignKey:"instructorId",useJunctionTable:false});
 
 const db= {};
 

@@ -1,3 +1,4 @@
+const { response, query } = require("express");
 const userService = require("../services/userService");
 const joi = require("joi");
 
@@ -22,12 +23,14 @@ const updateUserSchema = joi.object().keys({
   email: joi.string().email(),
   role: joi.string().valid("instructor", "trainee", "admin"),
   cohort:joi.string(),
-  isApproved:joi.boolean()
+  stack:joi.string(),
+  isApproved:joi.boolean(),
+  isBlocked:joi.boolean(),
 })
 
 const paginationSchema = joi.object().keys({
-  pageNo: joi.number().greater(0).default(1),
-  limit: joi.number().valid(5, 10).default(5),
+  pageNo: joi.number().default(1).greater(0),
+  limit: joi.number().default(5).valid(5, 10),
   sortValue: joi
       .string()
       .valid("userId", "email", "role", "firstName", "lastName").default("firstName"),
@@ -36,7 +39,9 @@ const paginationSchema = joi.object().keys({
   lastName: joi.string(),
   email: joi.string(),
   role: joi.string().valid("instructor", "trainee"),
-
+  lastName: joi.string(),
+  userId: joi.string(),
+  instructorId: joi.string(),
 })
 
 const onBoardingSchema = joi
@@ -87,6 +92,7 @@ getAllUsers: async (req, res) => {
 
     }
     catch (error) {
+
         return res.send({
             error: error
         });
@@ -224,7 +230,7 @@ getAllRequests: async (req, res) => {
       },
       getTotalTrainees: async (req, res) => {
         try {
-            const users = await userService.getTotalTrainees();
+            const users = await userService.getTotalTrainees(req.query);
           if (users.error) {
             return res.send({
               error: users.error,

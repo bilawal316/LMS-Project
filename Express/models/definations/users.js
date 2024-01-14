@@ -35,6 +35,9 @@ Users.init(
     cohort: {
       type: DataTypes.STRING(),
     },
+    stack: {
+      type: DataTypes.STRING(),
+    },
     isRequested: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

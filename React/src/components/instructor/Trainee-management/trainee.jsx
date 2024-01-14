@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-
+import Cookie from "universal-cookie";
 
 
 const Trainee = () => {
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const cookie = new Cookie()
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editData, setEditData] = useState({});
 
     const [isModalOpen, setModalOpen] = useState(false);
@@ -13,7 +14,7 @@ const Trainee = () => {
 
     const [selectedTraineeId, setSelectedTraineeId] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);  // default page is 1
-
+   
     
 
     const handleCloseModal = () => {
@@ -21,7 +22,13 @@ const Trainee = () => {
         setDimmed(false); 
     };
 
-
+    const getUserIdFromCookie = () => {
+        const authCookie = cookie.get('auth');
+        if (authCookie && authCookie.userId) {
+          return authCookie.userId;
+        }
+        return null;
+      };
 
     const [currentTrainee, setCurrentTrainee] = useState(null);
     const handleEditClick = (trainee) => {
@@ -63,16 +70,15 @@ const Trainee = () => {
     }
 
    const getAllTrainees = async (pageNo) => {
+        const userId = getUserIdFromCookie();
         try {
             setCurrentPage(pageNo);  // Update the currentPage state
-
             const { data } = await axios.get("http://localhost:3000/user/getAllUsers",{
                 params: {
-                    role:"trainee",
-                    pageNo: pageNo
+                    instructorId: userId,
                 }
             });
-            console.log(data)
+
             if (data.response) {
                 const formattedTrainees = data.response.map(item => ({
                     firstName: item.firstName,
@@ -104,15 +110,21 @@ const Trainee = () => {
         setModalOpen(true);
         setDimmed(true);
     };
-    const handlePageChange = (direction) => {
-        const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
-        getAllTrainees(newPage);
-      };
+    const traineesPerPage = 5;
+
+    const indexOfLastTeam = currentPage * traineesPerPage;
+    const indexOfFirstTeam = indexOfLastTeam - traineesPerPage;
+    const currentTrainees = Trainees.slice(indexOfFirstTeam, indexOfLastTeam);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
     useEffect(() => {
         void getAllTrainees();
     }, []);
 
-
+// console.log("Test",currentPage)
   return (
     <>
         <div className="w-full h-full p-4 pt-12 bg-opacity-50 bg-indigo-200">
@@ -229,6 +241,7 @@ const Trainee = () => {
                                         <th className="p-3 border border-gray-300">Name</th>
                                         <th className="p-3 border border-gray-300">Email</th>
                                         <th className="p-3 border border-gray-300">Cohort</th>
+                                        <th className="p-3 border border-gray-300">Stack</th>
                                         <th className="p-3 border border-gray-300">Action</th>
                                     </tr>
                                 </thead>
@@ -244,6 +257,10 @@ const Trainee = () => {
                                             </td>
                                             <td className="p-3 border border-gray-300">
                                                 <p>{trainee.cohort}
+                                                </p>
+                                            </td>
+                                            <td className="p-3 border border-gray-300">
+                                                <p>{trainee.stack}
                                                 </p>
                                             </td>
 
@@ -263,24 +280,22 @@ const Trainee = () => {
 
                                 </tbody>
                             </table>
-                            <div className="flex justify-center space-x-1 text-gray-100 p-2">
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('prev')}
-                                    >
-                                    <FaArrowLeft className= 'flex text-red-500'/>
-                                    </button>
-                                    <button type="button"  onClick={() => getAllTrainees(1)}   title="Page 1" className="bg-purple-700 inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border-rounded shadow-md text-white border-white">1</button>
-                                    <button type="button" onClick={() => getAllTrainees(2)} className ="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 2">2</button>
-                                    <button type="button"  onClick={() => getAllTrainees(3)} className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 3">3</button>
-                                    <button type="button"  onClick={() => getAllTrainees(4)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 4">4</button>
-                                    <button type="button"  onClick={() => getAllTrainees(5)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 5">5</button>
-                                    
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('next')}
-                                    >
-                                    <FaArrowRight className= 'flex text-red-500'/>
-                                    </button>
-                            </div>
+                            <div className="flex justify-center space-x-4 my-4">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="mr-2 px-3 py-1 bg-purple-700 text-white rounded"
+                >
+                  <FaArrowLeft />
+                </button>
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={indexOfLastTeam >= Trainee.length}
+                  className="px-3 py-1 bg-purple-700 text-white rounded"
+                >
+                  <FaArrowRight />
+                </button>
+                </div>
                         </div>
                     </div>
                 </div>

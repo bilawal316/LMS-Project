@@ -63,9 +63,9 @@ module.exports = {
                 };
             }
         },
+
         logout: async (userId) => {
             try {
-              // Assuming you have a valid userId
               const deleteSession = await sessionModel.deleteSession(userId);
         
               if (deleteSession.error) {
@@ -73,7 +73,6 @@ module.exports = {
                   error: deleteSession.error,
                 };
               }
-        
               return {
                 response: "Logout successful",
               };
@@ -85,8 +84,6 @@ module.exports = {
           },
             signUp: async(body) => {
                 try {
-                    // delete body.repeat_password;
-                    // body.password = await bcryptjs.hash(body.password,10)
                     const signUpResponse =  authModel.signUp(body);
                     if (signUpResponse.error){
                         return {

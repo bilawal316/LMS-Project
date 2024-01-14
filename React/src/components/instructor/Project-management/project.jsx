@@ -10,10 +10,6 @@ const Projects = () => {
 
     const [isModalOpen, setModalOpen] = useState(false);
     const [isDimmed, setDimmed] = useState(false);
-
-    const [selectedTraineeId, setSelectedTraineeId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);  // default page is 1
-
     
 
     const handleCloseModal = () => {
@@ -21,12 +17,9 @@ const Projects = () => {
         setDimmed(false); 
     };
 
-
-
-    const [currentTrainee, setCurrentTrainee] = useState(null);
-    const handleEditClick = (trainee) => {
-        setCurrentTrainee(trainee);
-        setEditData(trainee);
+    const handleEditClick = (Project) => {
+        setCurrentTrainee(Project);
+        setEditData(Project);
         setEditModalOpen(true);
         setDimmed(true); 
     };
@@ -38,7 +31,7 @@ const Projects = () => {
 
     const contentClassName = isDimmed ? 'dimmed' : '';
 
-    const [Trainees, setTrainees] = useState([]);
+    const [Projects, setProjects] = useState([]);
 
     const update = async (updatedData) => {
         try {
@@ -47,14 +40,14 @@ const Projects = () => {
             console.log(data); 
 
             // Update the Trainees state with the updated data
-            setTrainees(prevTrainees => {
-                const updatedIndex = prevTrainees.findIndex(trainee => trainee.email === updatedData.email);
+            setProjects(prevProjects => {
+                const updatedIndex = prevProjects.findIndex(trainee => trainee.email === updatedData.email);
                 if (updatedIndex !== -1) {
-                    const updatedTrainees = [...prevTrainees];
+                    const updatedTrainees = [...prevProjects];
                     updatedTrainees[updatedIndex] = updatedData;
                     return updatedTrainees;
                 }
-                return prevTrainees;
+                return prevProjects;
             });
 
         } catch (error) {
@@ -62,35 +55,29 @@ const Projects = () => {
         }
     }
 
-   const getAllTrainees = async (pageNo) => {
+   const getAllProjects = async (pageNo) => {
         try {
-            setCurrentPage(pageNo);  // Update the currentPage state
 
-            const { data } = await axios.get("http://localhost:3000/user/getAllUsers",{
-                params: {
-                    role:"trainee",
-                    pageNo: pageNo
-                }
+            const { data } = await axios.get("http://localhost:3000/project/getAllProjects",{
+                
             });
             console.log(data)
             if (data.response) {
-                const formattedTrainees = data.response.map(item => ({
-                    firstName: item.firstName,
-                    lastName: item.lastName,
-                    email: item.email,
-                    cohort: item.cohort,
-                    stack: item.stack,
-                    userId: item.userId
+                const formattedProjects = data.response.map(item => ({
+                    projectId: item.projectId,
+                    title: item.title,
+                    description: item.description,
+                    
                 }));
-                setTrainees(formattedTrainees);
+                setProjects(formattedProjects);
             }
         } catch (error) {
-            console.error("Error fetching Trainees:", error);
+            console.error("Error fetching Projects:", error);
         }
     };
-    const blockUser = async (trainee) => {
+    const blockUser = async (Projects) => {
         try {
-           const {data}= await axios.post("http://localhost:3000/user/blockUser", { userId: trainee });
+           const {data}= await axios.post("http://localhost:3000/user/blockUser", { userId: Projects });
             console.log(data.response)
         } catch (error) {
             console.error("Error approving request:", error);
@@ -98,18 +85,37 @@ const Projects = () => {
         }
     };
 
+    const creaate = async (createData) => {
+        try {
 
-    const handleBlockClick = (trainee) => {
-        setSelectedTraineeId(trainee.userId);
+            const { data } = await axios.put("http://localhost:3000/project/createProject", createData);
+            console.log(data);
+
+            // create the Projects state with the updated data
+            
+            setProjects(prevProjects => {
+                const updatedIndex = prevProjects.findIndex(Projects => Projects.projectId === updatedData.projectId);
+                if (updatedIndex !== -1) {
+                    const updatedProjects = [...prevProjects];
+                    updatedProjects[updatedIndex] = updatedData;
+                    return updatedProjects;
+                }
+                return prevProjects;
+            });
+
+        } catch (error) {
+            console.error("Error updating Projects:", error);
+        }
+    };
+
+    const handleBlockClick = (Projects) => {
+        setSelectedTraineeId(Projects.projectId);
         setModalOpen(true);
         setDimmed(true);
     };
-    const handlePageChange = (direction) => {
-        const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
-        getAllTrainees(newPage);
-      };
+   
     useEffect(() => {
-        void getAllTrainees();
+        void getAllProjects();
     }, []);
 
 
@@ -121,12 +127,12 @@ const Projects = () => {
                     <div className="absolute  bg-[#efebea] opacity-50" onClick={() => setEditModalOpen(false)}></div>
                     <div className="flex flex-col gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
                         <h2 className="text-xl font-semibold leading tracking">
-                            Edit Trainee
+                            Edit Projects
                         </h2>
                         <div className="mt-4">
                             {/* Here you can have your edit form fields */}
                             {/* For example: */}
-                            <label htmlFor="Email">Email</label><br />
+                            <label htmlFor="Email">Projects Id</label><br />
 
                             <input
                                 type="text"
@@ -136,15 +142,14 @@ const Projects = () => {
                                 className="border p-2 mb-2"
                                 disabled
                             /><br />
-                            <label htmlFor="First Name">First Name</label><br />
+                            <label htmlFor="Project Name">Project Name</label><br />
                             <input
                                 type="text"
                                 value={editData.firstName || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, firstName: e.target.value }))}
+                                onChange={(e) => setEditData(prev => ({ ...prev, title: e.target.value }))}
                                 placeholder="First Name"
                                 className="border p-2 mb-2"
                             /><br />
-                            <label htmlFor="Last Name">Last Name</label><br />
 
                             <input
                                 type="text"
@@ -189,16 +194,17 @@ const Projects = () => {
                         </h2>
                         <p className="flex-1 dark:text-gray-400">By blocking this user, they will no longer be able to interact with you or view your content.</p>
                         <div className="flex flex-col justify-end gap-3 mt-6 sm:flex-row">
-                            {Trainees.map((trainee, index) => (
-                                <div key={index}> {selectedTraineeId === trainee.userId ? (
+                            {Projects.map((Projects, index) => (
+                                <div key={index}> {selectedProjectsId === Projects.projectId ? (
                                     <button className="px-6 py-2 mr-5 rounded-sm shadow-sm bg-gray-200 text-black" onClick={handleCloseModal}>Close</button>
                                    
                                   ) :null}
-                                    {selectedTraineeId === trainee.userId ? (
-                                        <button className="px-6 py-2 rounded-sm shadow-sm bg-red-500 text-white" onClick={() => { handleCloseModal(); blockUser(trainee.userId); }}>Block</button>
+                                    {selectedProjectsId === Projects.projectsId ? (
+                                        <button className="px-6 py-2 rounded-sm shadow-sm bg-red-500 text-white" onClick={() => { handleCloseModal(); blockUser(Projects.
+                                Id); }}>Block</button>
                                     ) : null}
                                 </div>
-                            ))}
+                                ))}
 
                        
                             </div>
@@ -217,33 +223,33 @@ const Projects = () => {
                                 <a rel="noopener noreferrer" href="#" className="text-purple-700 text-sm hover:text-black flex items-center px-1 capitalize hover:underline">Trainees</a>
                             </li>
                         </ol>
-                        <h3 className="font-bold text-3xl ">Trainees</h3>
+                        <h3 className="font-bold text-3xl ">Trainees Projects</h3>
 
                     </nav>
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
-                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Trainee List</h2>
+                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Project List</h2>
                         <div className="overflow-x-auto w-full bg-white ">
                             <table className="w-full text-sm border-collapse">
                                 <thead className="bg-yellow-200">
                                     <tr className="text-left">
-                                        <th className="p-3 border border-gray-300">Name</th>
-                                        <th className="p-3 border border-gray-300">Email</th>
-                                        <th className="p-3 border border-gray-300">Cohort</th>
-                                        <th className="p-3 border border-gray-300">Action</th>
+                                        <th className="p-3 border border-gray-300">Project Id</th>
+                                        <th className="p-3 border border-gray-300">Project Name</th>
+                                        <th className="p-3 border border-gray-300">Project Description</th>
+                                        <th className="p-3 border border-gray-300">Project Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Trainees.map((trainee, index) => (
+                                    {Projects.map((Projects, index) => (
 
                                         <tr key={index} className="border-b border-opacity-20 border-gray-700 bg-white">
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.firstName + " " + trainee.lastName}</p>
+                                                <p>{Projects.projectId}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.email}</p>
+                                                <p>{Projects.title}</p>
                                             </td>
                                             <td className="p-3 border border-gray-300">
-                                                <p>{trainee.cohort}
+                                                <p>{Projects.description}
                                                 </p>
                                             </td>
 
@@ -263,24 +269,7 @@ const Projects = () => {
 
                                 </tbody>
                             </table>
-                            <div className="flex justify-center space-x-1 text-gray-100 p-2">
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('prev')}
-                                    >
-                                    <FaArrowLeft className= 'flex text-red-500'/>
-                                    </button>
-                                    <button type="button"  onClick={() => getAllTrainees(1)}   title="Page 1" className="bg-purple-700 inline-flex items-center justify-center w-8 h-8 text-sm font-semibold border-rounded shadow-md text-white border-white">1</button>
-                                    <button type="button" onClick={() => getAllTrainees(2)} className ="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 2">2</button>
-                                    <button type="button"  onClick={() => getAllTrainees(3)} className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 3">3</button>
-                                    <button type="button"  onClick={() => getAllTrainees(4)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 4">4</button>
-                                    <button type="button"  onClick={() => getAllTrainees(5)}  className="inline-flex items-center justify-center w-8 h-8 text-sm border-rounded shadow-md bg-purple-700 text-white border-white" title="Page 5">5</button>
-                                    
-                                    <button title="previous" type="button" className="pr-8 w-8 h-8 py-0 border rounded-md shadow-md bg-white border-gray-800"
-                                    onClick={() => handlePageChange('next')}
-                                    >
-                                    <FaArrowRight className= 'flex text-red-500'/>
-                                    </button>
-                            </div>
+
                         </div>
                     </div>
                 </div>

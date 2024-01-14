@@ -28,11 +28,10 @@ module.exports = {
             };
         }
     },
-    getAllProjects: async (query) => {
+    getAllProjects: async () => {
         try {
-            const offset = (query.pageNo - 1) * query.limit;
-            console.log(offset)
-            const projects = await projectModel.getAllProjects(offset, query);
+            // const offset = (query.pageNo - 1) * query.limit; (offset, query)
+            const projects = await projectModel.getAllProjects();
             if (projects.error) {
                 return {
                     error: projects.error,
@@ -40,15 +39,13 @@ module.exports = {
             } return {
                 response: projects.response,
             };
-
-
         } catch (error) {
             return {
                 error: error,
             };
         }
-
     },
+
     deleteUser: async (query) => {
         try {
 
@@ -125,4 +122,24 @@ module.exports = {
             };
         }
     },
+    getTotalProjects: async () => {
+        try {
+          const users = await projectModel.getTotalProjects();
+          if (users.error) {
+            return {
+              error: users.error,
+            };
+          }
+    
+          return {
+            response: users.response,
+          };
+        } catch (error) {
+          console.log(error)
+    
+          return {
+            error: error,
+          };
+        }
+      },
 };

@@ -104,7 +104,7 @@ admin: async (req, res, next) => {
     });
   } catch (error) {
     return res.send({
-      error: "unauthorizedddd User",
+      error: "unauthorized User",
     });
   }
 },
@@ -112,16 +112,21 @@ logout: async (req, res, next) => {
   try {
     const token = req.cookies.auth;
 
-    if (!token || token === undefined) {
+    if (!token || token.trim() === "") {
       return res.json({ error: "Unauthorized User" });
     }
 
     jwt.verify(token, config.jwt.secret, async (error, user) => {
+      console.log("userId", token)
       if (error) {
+        if (error.name === 'TokenExpiredError') {
+          return res.json({ error: "Token Expired" });
+        }
         return res.json({ error: "Unauthorized User" });
       }
 
       // logout logic here to validate
+      
       const deleteSession = await sessionModel.deleteSession(user.userId);
 
       if (deleteSession.error) {
@@ -136,5 +141,5 @@ logout: async (req, res, next) => {
   } catch (error) {
     return res.json({ error: "Internal Server Error" });
   }
-},
-};
+}
+}

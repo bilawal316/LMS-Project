@@ -57,7 +57,10 @@ module.exports = {
   getAllUsers: async ( offset, query) => {
       try {
           console.log("model",offset, query)
-
+          const pagination_info = query.limit == "all" || query?.limit ? {} : {
+            offset: offset,
+            limit: query.limit,
+          }
           const users = await models.Users.findAll({
               // attributes : ["firstName", "lastName", "role", "email"]
               attributes: {
@@ -65,32 +68,37 @@ module.exports = {
               },
               where: [
                   {
-                      ...(query.firstName
+                      ...(query?.firstName
                           ? { firstName: { [Op.substring]: query.firstName } }
                           : true),
                   },
                   {
-                      ...(query.lastName
+                      ...(query?.lastName
                           ? { lastName: { [Op.substring]: query.lastName } }
                           : true),
                   },
                   {
-                      ...(query.email
+                      ...(query?.email
                           ? { email: { [Op.substring]: query.email } }
                           : true),
                   },
                   {
-                    ...(query.role ? { role: query.role } : {}),
+                    ...(query?.role ? { role: query.role } : {}),
                   },
+                  {
+                    ...(query?.instructorId ? {instructorId: query.instructorId} : true)
+                    
+                },
               ],
               order: [[query.sortValue, query.sortOrder]],
-              offset: offset,
-              limit: query.limit,
+              ...pagination_info
           })
           return {
               response: users,
           };
       } catch (error) {
+      console.log(error)
+
           return {
               error: error,
           };
@@ -131,31 +139,6 @@ module.exports = {
         
       }
       },
-isLoggedIn: async (email) => {
-    try {
-      const user = await models.Users.findOne({
-        where: {
-          email: email,
-          isLoggedIn: true, // Check if the user is currently logged in
-        },
-        attributes: ['isLoggedIn'],
-      });
-
-      if (user) {
-        return {
-          response: true, // User is logged in
-        };
-      } else {
-        return {
-          response: false, // User is not logged in
-        };
-      }
-    } catch (error) {
-      return {
-        error: error,
-      };
-    }
-  },
   onBoarding: async (userId, instructorId) => {
     
     try {
@@ -215,7 +198,7 @@ isLoggedIn: async (email) => {
                 isRequested:true,
                 isApproved:false,
                 isBlocked:false,
-                role: query.role
+                instructorId: query.instructorId
               }
             })
             console.log("users",users)
@@ -229,15 +212,15 @@ isLoggedIn: async (email) => {
       }
 
   },
-  getTotalTrainees: async () => {
+  getTotalTrainees: async (query) => {
     try {
       const trainees = await models.Users.findAll({
+        where: {
+          instructorId: query
+        },
         attributes: {
           exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
-        },
-        where: {
-          role: 'trainee',
-        },
+        }
       });
   
       const totalTrainees = trainees.length;
@@ -278,7 +261,7 @@ getTeamByTeamId: async (teamsId) => {
   try {     
     const team = await models.Teams.findOne({
       where: {
-        teamId: teamId,
+        teamId: teamsId,
     }
   });
   return{
@@ -294,7 +277,7 @@ getTeamByTeamId: async (teamsId) => {
   getAllTeams: async () => {
     try {
       const teams = await models.Users.findAll({
-        attributes : ["teamsId", "teamsLeader"]
+        attributes : ["teamsId","title","teamsLeader",]
       //   attributes: {
       //     exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
       // },
@@ -370,5 +353,30 @@ getTasksByTasksId: async (tasksId) => {
         error: error,
       }
     }
-    }
+    },
+    isLoggedIn: async (email) => {
+      try {
+        const user = await models.Users.findOne({
+          where: {
+            email: email,
+            isLoggedIn: true, // Check if the user is currently logged in
+          },
+          attributes: ['isLoggedIn'],
+        });
+  
+        if (user) {
+          return {
+            response: true, // User is logged in
+          };
+        } else {
+          return {
+            response: false, // User is not logged in
+          };
+        }
+      } catch (error) {
+        return {
+          error: error,
+        };
+      }
+    },
 }

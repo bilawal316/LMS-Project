@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Cookie from "universal-cookie";
+
 
 
 
 const Profile = () => {
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-    const [editData, setEditData] = useState({});
-
-    const [isModalOpen, setModalOpen] = useState(false);
-    const [isDimmed, setDimmed] = useState(false);
-
-
-    
-
-    const handleCloseModal = () => {
-        setModalOpen(false);
-        setDimmed(false); 
-    };
-
+    const cookie = new Cookie();
 
 
     const [currentProfile, setCurrentProfile] = useState(null);
@@ -28,12 +17,17 @@ const Profile = () => {
         setDimmed(true); 
     };
 
-    const handleEditAction = () => {
-        setEditModalOpen(false);
-        setDimmed(false); 
-    };
+    
 
-    const contentClassName = isDimmed ? 'dimmed' : '';
+    const getUserIdFromCookie = () => {
+        const authCookie = cookie.get('auth');
+        if (authCookie && authCookie.userId) {
+          return authCookie.userId;
+        }
+        return null;
+      };
+
+
 
     const [Profiles, setProfiles] = useState([]);
 
@@ -59,14 +53,16 @@ const Profile = () => {
         }
     }
  
-   const getAllProfiles = async (userId) => {
+   const getAllProfiles = async () => {
         try {
+            const userId = getUserIdFromCookie();
+
             const { data } = await axios.get("http://localhost:3000/user/getUserByUserId",{
                 params: {
-                    userId: userId
+                    userId: userId,
                 }
             });
-            console.log(data)
+
             
             if (data.response) {
                 setProfiles(data.response);
@@ -93,105 +89,16 @@ const Profile = () => {
     };
     
     useEffect(() => {
-        void getAllProfiles("bd63d4e2-eca0-4eca-879a-f55684d916ae");
+        
+        void getAllProfiles();
     }, []);
 
 
   return (
     <>
-        <div className="w-full p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
-            {isEditModalOpen && (
-                <div className="modal-container  flex items-center justify-center z-100">
-                    <div className="absolute  bg-[#efebea] opacity-50" onClick={() => setEditModalOpen(false)}></div>
-                    <div className="flex flex-col gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
-                        <h2 className="text-xl font-semibold leading tracking">
-                            Edit Profile
-                        </h2>
-                        <div className="mt-4">
-                            {/* Here you can have your edit form fields */}
-                            {/* For example: */}
-                            <label htmlFor="Email">Email</label><br />
-
-                            <input
-                                type="text"
-                                value={editData.email || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, email: e.target.value }))}
-                                placeholder="Email"
-                                className="border p-2 mb-2"
-                                disabled
-                            /><br />
-                            <label htmlFor="First Name">First Name</label><br />
-                            <input
-                                type="text"
-                                value={editData.firstName || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, firstName: e.target.value }))}
-                                placeholder="First Name"
-                                className="border p-2 mb-2"
-                            /><br />
-                            <label htmlFor="Last Name">Last Name</label><br />
-
-                            <input
-                                type="text"
-                                value={editData.lastName || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, lastName: e.target.value }))}
-                                placeholder="Last Name"
-                                className="border p-2 mb-2"
-                            /><br />
-                            <label htmlFor="Cohort">Cohort</label><br />
-
-                            <input
-                                type="text"
-                                value={editData.cohort || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, cohort: e.target.value }))}
-                                placeholder="Cohort"
-                                className="border p-2 mb-2"
-                            /><br />
-                            <label htmlFor="Stack">Stack</label><br />
-
-                            <input
-                                type="text"
-                                value={editData.stack || ''}
-                                onChange={(e) => setEditData(prev => ({ ...prev, stack: e.target.value }))}
-                                placeholder="Stack"
-                                className="border p-2 mb-2"
-                            />
-                            {/* ... other fields */}
-                        </div>
-                        <div className="flex justify-end mt-6">
-                            <button className="px-6 py-2 rounded-sm shadow-sm bg-gray-200 text-black" onClick={handleEditAction}>Close</button>
-                            <button className="px-6 py-2 rounded-sm shadow-sm bg-indigo-500 text-white ml-2" onClick={() => { handleEditAction(); update(editData); }}>Save</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {isModalOpen && (
-                <div className="modal-container flex items-center justify-center z-100">
-                    <div className="absolute  bg-[#efebea] opacity-50" onClick={handleCloseModal}></div>
-                    <div className="flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white opacity-100 text-black">
-                        <h2 className="flex items-center gap-2 text-xl font-semibold leadi tracki">
-                            <span className=''>Are you sure you want to block this user?</span>
-                        </h2>
-                        <p className="flex-1 dark:text-gray-400">By blocking this user, they will no longer be able to interact with you or view your content.</p>
-                        <div className="flex flex-col justify-end gap-3 mt-6 sm:flex-row">
-                            {Profiles.map((Profile, index) => (
-                                <div key={index}> {selectedProfileId === Profile.userId ? (
-                                    <button className="px-6 py-2 mr-5 rounded-sm shadow-sm bg-gray-200 text-black" onClick={handleCloseModal}>Close</button>
-                                   
-                                  ) :null}
-                                    {selectedProfileId === Profile.userId ? (
-                                        <button className="px-6 py-2 rounded-sm shadow-sm bg-red-500 text-white" onClick={() => { handleCloseModal(); blockUser(Profile.userId); }}>Block</button>
-                                    ) : null}
-                                </div>
-                            ))}
-
-                       
-                            </div>
-                    </div>
-                </div>
-            )}
-            <div className={`h-full w-full flex ${contentClassName}`}>
-                <div className="w-full">
-                    <nav className="text-purple-700 w-full p-4  dark:text-purple-700">
+        <div className="w-full h-full text-indigo-700 p-4 pt-12 bg-opacity-50 bg-indigo-200">
+            
+                    <nav className="text-purple-700 w-full  dark:text-purple-700">
                         <ol className="text-purple-700 mt-6 flex h-8 space-x-2 dark:text-purple-700">
                             <li className="text-purple-700 flex items-center">
                                 <a rel="noopener noreferrer" href="#" title="Back to homepage" className="text-purple-700 text-sm hover:text-black flex items-center hover:underline">Instructor</a>
@@ -205,60 +112,57 @@ const Profile = () => {
 
                     </nav>
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
-                        <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Profile List</h2>
-                        <div className="overflow-x-auto w-full bg-white ">
-                            <table className="w-full text-sm border-collapse">
-                                <thead className="bg-yellow-200">
-                                    <tr className="text-left">
-                                        <th className="p-3 border border-gray-300">First Name</th>
-                                        <th className="p-3 border border-gray-300">Last Name</th>
-                                        <th className="p-3 border border-gray-300">User Id</th>
-                                        <th className="p-3 border border-gray-300">Email</th>
-                                        <th className="p-3 border border-gray-300">Role</th>
-                                        <th className="p-3 border border-gray-300">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* {Profiles.map((Profile, index) => ( */}
-
-                                        <tr  className="border-b border-opacity-20 border-gray-700 bg-white">
-                                            <td className="p-3 border border-gray-300">
-                                                <p>{Profiles.firstName}</p>
-                                            </td>
-                                            <td className="p-3 border border-gray-300">
-                                                <p>{Profiles.lastName}</p>
-                                            </td>
-                                            <td className="p-3 border border-gray-300">
-                                                <p>{Profiles.userId}</p>
-                                            </td>
-                                            <td className="p-3 border border-gray-300">
-                                                <p>{Profiles.email}</p>
-                                            </td>
-                                            <td className="p-3 border border-gray-300">
-                                                <p>{Profiles.role}
-                                                </p>
-                                            </td>
-
-                                            <td className="p-3 border border-gray-300">
-
-                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(Profiles)}>                                                <span>Edit</span>
-
-                                                </span>  <span
-                                                    className="px-3 py-2 text-white rounded-md bg-red-500 cursor-pointer"
-                                                    onClick={() => handleBlockClick(Profiles)} // Pass the Profile object here
-                                                >
-                                                    <span>Block</span>
-                                                </span>
-                                            </td> 
-                                        </tr>
-                                    {/* ))} */}
-
-                                </tbody>
-                            </table>
+                        <div className="overflow-x-auto w-full  ">
+                            <div class="bg-white max-w-2xl shadow overflow-hidden sm:rounded-lg">
+                            <div class="border-t border-gray-200">
+                            <dl>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Full name
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <p>{Profiles.firstName + ' ' + Profiles.lastName}</p>
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        User Id
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <p>{Profiles.userId}</p>
+                                    </dd>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Email address
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <p>{Profiles.email}</p>
+                                    </dd>
+                                </div>
+                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        Role
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <p>{Profiles.role}</p>
+                                    </dd>
+                                </div>
+                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt class="text-sm font-medium text-gray-500">
+                                        About
+                                    </dt>
+                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    Instructors play a crucial role in guiding aspiring developers through the intricacies of web development. Specializing in React, they emphasize component-based architecture and declarative syntax to enable the creation of dynamic and responsive web applications. Through hands-on exercises, they empower learners to navigate real-world challenges. Overall, React instructors not only impart technical skills but also foster a creative mindset essential for success in the dynamic field of web development.
+                                    </dd>
+                                    </div>
+                            </dl>                    
+                
+                    </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            
 
         </div>
     </>

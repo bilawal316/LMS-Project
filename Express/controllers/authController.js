@@ -26,7 +26,9 @@ module.exports ={
           res.cookie("auth", loginResponse.response, {
             maxAge: 60 * 60 * 1000,
           });
-    
+          // res.cookie("userId", loginResponse.response.userId, {
+          //   maxAge: 60 * 60 * 1000,
+          // });
           return res.send({
             response: loginResponse.response,
           });
@@ -36,36 +38,26 @@ module.exports ={
           });
         }
       },
-    logout: async (req, res) => {  
-  try {
-    // Assuming that the user ID is stored in req.user.userId
-    const userId = req.user ? req.user.userId : null;
+      logout: (req, res) => {
+        try {
+            const logoutResponse = authService.logout(req.body);
+            if (logoutResponse.error) {
+                res.send({
+                    error: logoutResponse.error,
+                });
 
-    if (!userId) {
-      return res.send({
-        error: "User ID not found in the request.",
-      });
-    }
-
-    const logoutResponse = await authService.logout(userId);
-
-    if (logoutResponse.error) {
-      return res.send({
-        error: logoutResponse.error,
-      });
-    }
-
-    res.clearCookie("auth");
-
-    return res.send({
-      response: logoutResponse.response,
-    });
-  } catch (error) {
-    return res.send({
-      error: error,
-    });
-  }
-},
+            }
+            res.send({
+                response: logoutResponse.response,
+            });
+        }
+        catch (error) {
+            res.send({
+                error: error,
+            });
+        };
+    },
+    
     signUp : async (req, res) => {
         try{
             const validate = await signUpSchema.validateAsync(req.body);

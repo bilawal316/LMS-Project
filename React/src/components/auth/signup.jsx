@@ -9,16 +9,10 @@ function Signup(updateState) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
-console.log(role)
+    
     const Signup = async (e) => {
         e.preventDefault();
-        console.log("firstName", firstName);
-        console.log("lastName", lastName);
-        console.log("email", email);
-        console.log("password", password);
-        console.log("confirm", confirmPassword);
-        console.log("role", role);
-
+       
         const { data } = await axios.post("http://localhost:3000/user/createUser", {
             firstName,
             lastName,
@@ -31,8 +25,6 @@ console.log(role)
             withCredentials: true,
           }
         )
-
-        console.log("Signup reponse", data)
         if (data.error) {
             return alert("invalid credentials")
         }

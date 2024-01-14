@@ -55,6 +55,8 @@ getAllUsers: async (query) => {
 
 
   } catch (error) {
+    console.log(error)
+
       return {
           error: error,
       };
@@ -64,8 +66,6 @@ getAllUsers: async (query) => {
 getAllRequests: async (query) => {
   try {
       const users = await userModel.getAllRequests(query);
-console.log("service===",users)
-
       if (users.error) {
           return {
               error: users.error,
@@ -181,9 +181,9 @@ console.log("service===",users)
       };
     }
   },
-  getTotalTrainees: async () => {
+  getTotalTrainees: async (query) => {
     try {
-      const users = await userModel.getTotalTrainees();
+      const users = await userModel.getTotalTrainees(query.instructorId);
       if (users.error) {
         return {
           error: users.error,

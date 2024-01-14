@@ -39,27 +39,26 @@ module.exports = {
         }
 
     },
-    getAllProjects: async (offset, query) => {
+    getAllProjects: async () => {
         try {
-            console.log("model", offset, query)
-
             const projects = await models.Projects.findAll({
                 // attributes : ["firstName", "lastName", "role", "email"]
                 attributes: {
                     exclude: ["createdAt", "updatedAt", "deletedAt"],
                 },
-                where: [
-                    {
-                        ...(query.title
-                            ? { title: { [Op.substring]: query.title } }
-                            : true),
-                    },
+                // where: [
+                //     {
+                //         ...(query.title
+                //             ? { title: { [Op.substring]: query.title } }
+                //             : true),
+                //     },
 
-                ],
-                order: [[query.sortValue, query.sortOrder]],
-                offset: offset,
-                limit: query.limit,
+                // ],
+                // order: [[query.sortValue, query.sortOrder]],
+                // offset: offset,
+                // limit: query.limit,
             })
+            
             return {
                 response: projects,
             };
@@ -98,7 +97,7 @@ module.exports = {
             }, {
                 where: {
 
-                    projectsId: body.projectsId,
+                    projectId: body.projectId,
                 }
             })
             return {
@@ -138,4 +137,31 @@ module.exports = {
             };
         }
     },
+
+    getTotalProjects: async () => {
+        try {
+          const projects = await models.Projects.findAll({
+            attributes: {
+              exclude: ["password", "createdAt", "updatedAt", "deletedAt"],
+            },
+            // where: {
+            //   role: 'trainee',
+            // },
+          });
+      
+          const totalProjects = projects.length;
+      
+          return {
+            response: {
+                totalProjects: totalProjects,
+              projectsList: projects,
+            },
+          };
+      
+        } catch (error) {
+          return {
+            error: error,
+          };
+        }
+      },
 };

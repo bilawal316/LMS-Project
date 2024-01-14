@@ -3,7 +3,7 @@ import React from 'react'
 const Tasks = () => {
   return (
     <>
-      <div className="w-full h-screen p-4 lg:ml-80 lg:mr-8 my-6 bg-opacity-50 sm:mx-4 text-indigo-700 bg-indigo-200">
+      <div className="w-full h-full p-4 pt-12 bg-opacity-50 bg-indigo-200 text-indigo-700">
         <h1 className="text-4xl font-bold text-center tracking-tight leading-10 mb-4 ">
           Tasks
         </h1>

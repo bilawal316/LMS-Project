@@ -6,13 +6,14 @@ const joi = require("joi");
 const createProjectSchema = joi.object().keys({
     title: joi.string().required().min(3).max(20),
     description: joi.string().required().min(5).max(100),
-
+    deadlineDate: joi.date().raw().required(),
 })
 
 const updateProjectSchema = joi.object().keys({
     projectId:joi.string().required(),
     title: joi.string().min(3).max(20),
     description: joi.string().min(5).max(100),
+    deadlineDate: joi.date().raw().required(),
 
 })
 
@@ -54,16 +55,12 @@ module.exports = {
     },
     getAllProjects: async (req, res) => {
         try {
-
-
-            const validate = await paginationSchema.validateAsync(req.query);
-            const projects = await projectService.getAllProjects(validate);
-            console.log(validate)
+            // const validate = await paginationSchema.validateAsync(req.query);
+            const projects = await projectService.getAllProjects();
             if (projects.error) {
                 return res.send({
                     error: projects.error,
                 });
-
             }
             return res.send({
                 response: projects.response,
@@ -79,6 +76,7 @@ module.exports = {
 
 
     updateProject: async (req, res) => {
+        console.log("check2")
         try {
             const validate = await updateProjectSchema.validateAsync(req.body);
 
@@ -126,5 +124,21 @@ module.exports = {
             });
         };
     },
-
+    getTotalProjects: async (req, res) => {
+        try {
+            const projects = await projectService.getTotalProjects();
+          if (projects.error) {
+            return res.send({
+              error: projects.error,
+            });
+          }
+          console.log("bilawal2", projects.response)
+          return res.send({
+            response: projects.response.totalProjects,
+          });
+        } catch (error) {
+          return res.send({
+            error: error,
+          });
+        }},
 }
