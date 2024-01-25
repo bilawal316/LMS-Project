@@ -10,7 +10,7 @@ const createUserSchema = joi.object().keys({
   password: joi.string().required().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   confirmPassword: joi.ref("password"),
   role: joi.string().valid("instructor", "trainee", "admin"),
-  cohort: joi.string().required().min(3).max(40),
+  cohort: joi.string().min(3).max(40),
 });
 
 const getByUserIdSchema = joi.object().keys({

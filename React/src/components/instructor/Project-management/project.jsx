@@ -46,6 +46,7 @@ const Projects = () => {
         projectTitle: '',
         description: '',
         deadlineDate: '',
+        teamId: '',
     });
 
     const handleInputChange = (e) => {
@@ -128,6 +129,7 @@ const Projects = () => {
                 instructorId: getUserIdFromCookie(),
                 projectTitle: '',
                 description: '',
+                title:'',
                 teamId: '',
                 deadlineDate: ''
             });
@@ -205,21 +207,20 @@ const Projects = () => {
                                 placeholder="Project Description"
                                 className="border p-2 mb-2"
                             ></textarea><br/>
-                            <label htmlFor="TeamId">Team ID</label><br />
-                                <select
-                                    type="text"
-                                    name="teamId"
-                                    value={createData.teamId}
-                                    onChange={handleInputChange}
-                                    className="border p-2 mb-2"
-                                >
-                                    <option value="">Select Team ID</option>
-                                    {teams.map((team) => (
-                                        <option key={team.teamId} value={team.teamId}>
-                                            {team.teamId}
-                                        </option>
-                                    ))}
-                                </select>
+                            <select
+                            type="text"
+                            name="teamId"
+                            value={createData.teamId}
+                            onChange={handleInputChange}
+                            className="border p-2 mb-2"
+                            >
+                            <option value="">Select Team Title</option>
+                            {teams.map((team) => (
+                                <option key={team.teamId} value={team.teamId}>
+                                    {team.teamTitle}
+                                </option>
+                            ))}
+                            </select>
                             {/* ... other fields */}
                         </div>
                         <div className="flex justify-end mt-6">

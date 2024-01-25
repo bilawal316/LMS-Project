@@ -21,8 +21,8 @@ const getByTaskIdSchema = joi.object().keys({
 
 const updateTaskSchema = joi.object().keys({
     taskId: joi.string().required(),
-    title: joi.string().min(3).max(20),
-    description: joi.string().min(5).max(100),
+    title: joi.string().min(3).max(200),
+    description: joi.string().min(5).max(200),
     status: joi.string()
 })
 module.exports = {

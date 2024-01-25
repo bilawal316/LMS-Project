@@ -122,16 +122,18 @@ function Signup(updateState) {
                         >
                             Role
                         </label>
-                        <select className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                            onChange={(e)=>{
-                                setRole(e.target.value)
-                        }}
-                        >
-                            <option value="" disabled selected> Select an option </option>
-                            <option value="admin"> Admin </option>
-                            <option value="instructor"> Instructor </option>
-                            <option value="trainee"> Trainee </option>
-                        </select>
+                        <select
+                            className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            onChange={(e) => {
+                                setRole(e.target.value);
+                            }}
+                            value={role}  // Use the value prop to set the selected option
+                            >
+                            <option value="" disabled>Select an option</option>
+                            <option value="admin">Admin</option>
+                            <option value="instructor">Instructor</option>
+                            <option value="trainee">Trainee</option>
+                            </select>
                     </div>
 
                     <div className="mt-6">

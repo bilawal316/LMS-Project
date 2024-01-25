@@ -157,7 +157,7 @@
       setNewTeamData({
         instructorId: getUserIdFromCookie(),
         teamsLeaderId: "",
-        title: "New Team",
+        title: "",
       });
       setAddModalOpen(true);
       setDimmed(true);
