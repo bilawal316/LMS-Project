@@ -27,6 +27,10 @@ Users.init(
       type: DataTypes.STRING(),
       allowNull: false,
     },
+    profilePicture: {
+      type: DataTypes.BLOB(),
+      allowNull: true,
+    },
     role: {
       allowNull: false,
       type: DataTypes.ENUM,

@@ -5,7 +5,10 @@ const loginSchema=joi.object().keys({
     email: joi.string().required().email().min(3).max(60),
     password: joi.string().required()
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-})
+});
+const logoutSchema = joi.object().keys({
+  userId: joi.string().required().min(3).max(100),
+});
 
 const signUpSchema=joi.object().keys({
 email:joi.string().required().email().min(3).max(30),
@@ -38,25 +41,49 @@ module.exports ={
           });
         }
       },
-      logout: (req, res) => {
-        try {
-            const logoutResponse = authService.logout(req.body);
-            if (logoutResponse.error) {
-                res.send({
-                    error: logoutResponse.error,
-                });
+    //   logout: (req, res) => {
+    //     try {
+    //         const logoutResponse = authService.logout(req.body);
+    //         if (logoutResponse.error) {
+    //             res.send({
+    //                 error: logoutResponse.error,
+    //             });
 
-            }
-            res.send({
-                response: logoutResponse.response,
-            });
-        }
-        catch (error) {
-            res.send({
-                error: error,
-            });
-        };
-    },
+    //         }
+    //         res.send({
+    //             response: logoutResponse.response,
+    //         });
+    //     }
+    //     catch (error) {
+    //         res.send({
+    //             error: error,
+    //         });
+    //     };
+    // },
+
+    logout: async(req, res) => {
+      try {
+          const validate = await logoutSchema.validateAsync(req.body);
+
+          const logoutResponse = authService.logout(validate);
+          res.clearCookie("auth");
+          // Check if the 'Set-Cookie' header is present
+          if (res.get("Set-Cookie")) {
+              console.log("Cookie deleted successfully");
+          } else {
+              console.log("Cookie deletion failed");
+          }
+
+          return res.send({
+              response: "session deleted successfully",
+          });
+      }
+      catch (error) {
+          res.send({
+              error: error,
+          });
+      };
+  },
     
     signUp : async (req, res) => {
         try{

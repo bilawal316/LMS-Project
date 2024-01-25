@@ -7,49 +7,49 @@ const TeamMembers = require("./definations/teamMembers");
 const Sessions = require("./definations/sessions")
 
 
-const models = { 
-    Users, Team, Projects, Tasks , TeamMembers, Sessions
-};
+const models = { Sessions, Users, Projects, Team, Tasks, TeamMembers };
 
-//relations
 
-//team-projects one-to-one 
-Team.hasOne(Projects , {foreignKey: "TeamId"});
-Projects.belongsTo(Team, {foreignKey: "TeamId"});
+Users.hasMany(TeamMembers, { foreignKey: 'userId', onDelete: "CASCADE" });
+TeamMembers.belongsTo(Users, { foreignKey: 'userId', onDelete: "CASCADE" });
 
-//users-sessions one-to-one 
-Users.hasOne(Sessions , {foreignKey: "userId"});
-Sessions.belongsTo(Users, {foreignKey: "userId"});
+Users.hasMany(Projects, { foreignKey: 'instructorId', onDelete: "CASCADE" });
+Projects.belongsTo(Users, { foreignKey: 'instructorId', onDelete: "CASCADE" });
 
-//projects-task one-to-many
-Projects.hasMany(Tasks , {foreignKey: "ProjectId"});
-Tasks.belongsTo(Projects, {foreignKey: "ProjectId"});
+Team.hasMany(TeamMembers, { foreignKey: 'teamId', onDelete: "CASCADE" });
+TeamMembers.belongsTo(Team, { foreignKey: 'teamId', onDelete: "CASCADE" });
 
-//TeamMember-task one-to-many
-TeamMembers.hasMany(Tasks , {foreignKey: "TasksId"});
-Tasks.belongsTo(TeamMembers, {foreignKey: "TasksId"});
+Team.hasOne(Projects, { foreignKey: 'teamId', onDelete: "CASCADE" });
+Projects.belongsTo(Team, { foreignKey: 'teamId', onDelete: "CASCADE" });
 
-//User-TeamMember one-to-many
-Users.hasMany(TeamMembers, { foreignKey: "UserId" });
-TeamMembers.belongsTo(Users, { foreignKey: "UserId" });
+Projects.hasOne(Team, { foreignKey: 'projectId', onDelete: "CASCADE" });
+Team.belongsTo(Projects, { foreignKey: 'projectId', onDelete: "CASCADE" });
 
-//TeamMember-teams one-to-many
-Team.hasMany(TeamMembers , {foreignKey: "TeamsId"});
-TeamMembers.belongsTo(Team, {foreignKey: "TeamsId"});
+Users.hasOne(Sessions, { foreignKey: 'userId', onDelete: "CASCADE" });
+Sessions.belongsTo(Users, { foreignKey: 'userId', onDelete: "CASCADE" });
 
-//users-teams one-to-many (user as a instructor)
-Users.hasMany(Team, {foreignKey: "instructorId"});
-Team.belongsTo(Users, {foreignKey: "instructorId"})
+Projects.hasMany(Tasks, { foreignKey: 'projectId', onDelete: "CASCADE" });
+Tasks.belongsTo(Projects, { foreignKey: 'projectId', onDelete: "CASCADE" });
 
-//Project-teams one-to-many
-Projects.hasMany(Team, {foreignKey: "projectId"});
-Team.belongsTo(Projects, {foreignKey: "projectId"})
+TeamMembers.hasMany(Tasks, { foreignKey: 'teamMemberId', onDelete: "CASCADE" });
+Tasks.belongsTo(TeamMembers, { foreignKey: 'teamMemberId', onDelete: "CASCADE" });
 
-Users.hasMany(Users,{foreignKey:"instructorId",useJunctionTable:false});
+Users.hasMany(Tasks, { foreignKey: 'instructorId', onDelete: "CASCADE" });
+Tasks.belongsTo(Users, { foreignKey: 'instructorId', onDelete: "CASCADE" });
 
-const db= {};
 
-db.sequelize= sequelize;
+Users.hasMany(Team, { foreignKey: 'instructorId' });
+Team.belongsTo(Users, { foreignKey: 'instructorId' });
+
+Users.hasMany(Users, {
+    foreignKey: "instructorId",
+    useJunctionTable: false,
+});
+
+
+const db = {};
+
+db.sequelize = sequelize;
 sequelize.models = models;
 
-module.exports = {models, db};
+module.exports = { db, models }

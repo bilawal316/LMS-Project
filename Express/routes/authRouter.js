@@ -3,7 +3,7 @@
     const { trainee, instructor, logout } = require("../middleware")
 
     router.post("/login", authController.login);
-    router.post("/logout", logout, authController.logout);
+    router.post("/logout", authController.logout);
     router.post("/signUp", authController.signUp);
     router.get("/forgotPassword", authController.forgotPassword);
     router.get("/resetPassword", authController.resetPassword);

@@ -20,29 +20,25 @@ module.exports = {
         };
       }
       },
-    logout: async (email) => {
+    logout:async (body) => {
       try {
-        // Check if the user is logged in before updating the status
-        const isLoggedInResult = await userModel.isLoggedIn(email);
-  
-        if (isLoggedInResult.response) {
-          // User is logged in, proceed with logout
-          await models.Users.update({ isLoggedIn: false }, { where: { email } });
-  
+          const user = await models.Sessions.destroy({
+              where: {
+                  userId: body.userId,
+              },
+          });
+          console.log("this user", user)
+         
           return {
-            response: `User with email ${email} is logged out`,
+              response: "session deleted successfully",
           };
-        } else {
-          return {
-            error: `User with email ${email} is not logged in`,
-          };
-        }
       } catch (error) {
-        return {
-          error: error,
-        };
+          return {
+              error: error,
+          };
       }
-    },
+
+  },
       signUp: (body) => {
         try{
           return {

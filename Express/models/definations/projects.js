@@ -9,7 +9,7 @@ Projects.init(
       primaryKey: true,
       type: DataTypes.STRING(60),
     },
-    title: {
+    projectTitle: {
       type: DataTypes.STRING(60),
       allowNull: false,
       unique: true,

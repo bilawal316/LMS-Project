@@ -64,24 +64,46 @@ module.exports = {
             }
         },
 
-        logout: async (userId) => {
-            try {
-              const deleteSession = await sessionModel.deleteSession(userId);
+        // logout: async (userId) => {
+        //     try {
+        //       const deleteSession = await sessionModel.deleteSession(userId);
         
-              if (deleteSession.error) {
+        //       if (deleteSession.error) {
+        //         return {
+        //           error: deleteSession.error,
+        //         };
+        //       }
+        //       return {
+        //         response: "Logout successful",
+        //       };
+        //     } catch (error) {
+        //       return {
+        //         error: error,
+        //       };
+        //     }
+        //   },
+        logout: async (body) => {
+            try {
+                const logoutResponse = await authModel.logout(body);
+                console.log("req body data", logoutResponse)
+             
+                if (logoutResponse.error) {
+                    return {
+                        error: "error",
+                    };
+    
+                }
                 return {
-                  error: deleteSession.error,
+                    response: logoutResponse,
                 };
-              }
-              return {
-                response: "Logout successful",
-              };
-            } catch (error) {
-              return {
-                error: error,
-              };
             }
-          },
+    
+            catch (error) {
+                return {
+                    error: error,
+                };
+            }
+        },
             signUp: async(body) => {
                 try {
                     const signUpResponse =  authModel.signUp(body);

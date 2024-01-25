@@ -4,9 +4,11 @@ const joi = require("joi");
 
 
 const createProjectSchema = joi.object().keys({
-    title: joi.string().required().min(3).max(20),
+    instructorId:  joi.string().required().min(3).max(60),
+    projectTitle: joi.string().required().min(3).max(20),
     description: joi.string().required().min(5).max(100),
-    deadlineDate: joi.date().raw().required(),
+    deadlineDate: joi.date().raw(),
+    teamId: joi.string().min(5).max(100).required()
 })
 
 const updateProjectSchema = joi.object().keys({
@@ -17,6 +19,9 @@ const updateProjectSchema = joi.object().keys({
 
 })
 
+const InsProjectSchema = joi.object().keys({
+    instructorId: joi.string().required(),
+})
 
 
 const paginationSchema = joi.object().keys({
@@ -56,11 +61,35 @@ module.exports = {
     getAllProjects: async (req, res) => {
         try {
             // const validate = await paginationSchema.validateAsync(req.query);
-            const projects = await projectService.getAllProjects();
+            const projects = await projectService.getAllProjects(req.query);
             if (projects.error) {
                 return res.send({
                     error: projects.error,
                 });
+            }
+            return res.send({
+                response: projects.response,
+            });
+
+        }
+        catch (error) {
+            return res.send({
+                error: error
+            });
+        };
+    },
+    getInsProjects: async (req, res) => {
+        try {
+
+
+            const validate = await InsProjectSchema.validateAsync(req.query);
+            const projects = await projectService.getInsProjects(validate);
+            console.log(validate)
+            if (projects.error) {
+                return res.send({
+                    error: projects.error,
+                });
+
             }
             return res.send({
                 response: projects.response,
@@ -141,4 +170,30 @@ module.exports = {
             error: error,
           });
         }},
+        getInsProjects: async (req, res) => {
+            try {
+    
+    
+                const validate = await InsProjectSchema.validateAsync(req.query);
+                const projects = await projectService.getInsProjects(validate);
+                console.log(validate)
+                if (projects.error) {
+                    return res.send({
+                        error: projects.error,
+                    });
+    
+                }
+                return res.send({
+                    response: projects.response,
+                });
+    
+            }
+            catch (error) {
+                return res.send({
+                    error: error
+                });
+            };
+        },
+    
+    
 }

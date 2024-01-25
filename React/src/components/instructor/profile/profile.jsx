@@ -113,47 +113,47 @@ const Profile = () => {
                     </nav>
                     <div className="container p-2 mx-auto sm:p-4 text-black ">
                         <div className="overflow-x-auto w-full  ">
-                            <div class="bg-white max-w-2xl shadow overflow-hidden sm:rounded-lg">
-                            <div class="border-t border-gray-200">
+                            <div className="bg-white max-w-2xl shadow overflow-hidden sm:rounded-lg">
+                            <div className="border-t border-gray-200">
                             <dl>
-                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt class="text-sm font-medium text-gray-500">
+                                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt className="text-sm font-medium text-gray-500">
                                         Full name
                                     </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     <p>{Profiles.firstName + ' ' + Profiles.lastName}</p>
                                     </dd>
                                 </div>
-                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt class="text-sm font-medium text-gray-500">
+                                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt className="text-sm font-medium text-gray-500">
                                         User Id
                                     </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     <p>{Profiles.userId}</p>
                                     </dd>
                                 </div>
-                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt class="text-sm font-medium text-gray-500">
+                                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt className="text-sm font-medium text-gray-500">
                                         Email address
                                     </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     <p>{Profiles.email}</p>
                                     </dd>
                                 </div>
-                                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt class="text-sm font-medium text-gray-500">
+                                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt className="text-sm font-medium text-gray-500">
                                         Role
                                     </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                     <p>{Profiles.role}</p>
                                     </dd>
                                 </div>
-                                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt class="text-sm font-medium text-gray-500">
+                                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                    <dt className="text-sm font-medium text-gray-500">
                                         About
                                     </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    Instructors play a crucial role in guiding aspiring developers through the intricacies of web development. Specializing in React, they emphasize component-based architecture and declarative syntax to enable the creation of dynamic and responsive web applications. Through hands-on exercises, they empower learners to navigate real-world challenges. Overall, React instructors not only impart technical skills but also foster a creative mindset essential for success in the dynamic field of web development.
+                                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2" style={{ textAlign: 'left', textJustify: 'inter-word' }}>
+                                        Instructors play a crucial role in guiding aspiring developers through the intricacies of web development. Specializing in React, they emphasize component-based architecture and declarative syntax to enable the creation of dynamic and responsive web applications. Through hands-on exercises, they empower learners to navigate real-world challenges. Overall, React instructors not only impart technical skills but also foster a creative mindset essential for success in the dynamic field of web development.
                                     </dd>
                                     </div>
                             </dl>                    

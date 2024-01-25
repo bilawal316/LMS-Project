@@ -4,7 +4,7 @@ import Navbar from '../instructor/navbar'
 import Sidebar from '../instructor/sidebar'
 import Home from "../instructor/home";
 import Teams from "../instructor/Team-management/teams";
-import Tasks from "../instructor/Project-management/tasks";
+import Tasks from "../instructor/Task-management/tasks";
 import Projects from "../instructor/Project-management/project";
 import Reports from "../instructor/Reports/reports";
 import Trainees from "../instructor/Trainee-management/trainee";
@@ -26,7 +26,9 @@ const Instructor_layout = () => {
   return (
     <div>
         <div className=" w-screen h-screen flex flex-col bg-[#efebea]">
-          <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />          
+          <div>
+          <Navbar updateState={updateState} toggleSidebar={toggleSidebar} />
+          </div>
             <div className="flex h-full">
             <div className="w-1/5">
           <Sidebar updateState={updateState} />

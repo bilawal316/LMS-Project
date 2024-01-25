@@ -4,10 +4,11 @@ const joi = require("joi");
 
 
 const createTeamSchema = joi.object().keys({
-    teamsLeaderId: joi.string().uuid().required(),
-    title: joi.string().required().min(3).max(60),
-    instructorId: joi.string().required().min(3).max(60),
-    projectId: joi.string().min(3).max(60),
+    teamsLeaderId: joi.string().required(),
+    title:joi.string().required(),
+    projectId: joi.string(),
+    userId: joi.array().items(joi.string().uuid()).required(),
+    instructorId: joi.string().required(),
 })
 
 const createTeamMembersSchema = joi.object().keys({
@@ -53,21 +54,28 @@ const paginationSchema = joi.object().keys({
     title: joi.string(),
 
 })
+const getTeamByProjectId = joi.object().keys({
+    projectId: joi.string().required()
+})
 
 module.exports = {
     createTeam: async (req, res) => {
         try {
+            console.log("body here", req.body)
+
             const validate = await createTeamSchema.validateAsync(req.body);
-            console.log("req.body")
-            const teams = await teamService.createTeam(validate);
-            if (teams.error) {
+            console.log("here", validate)
+            const team = await teamService.createTeam(validate);
+            if (team.error) {
                 return res.send({
-                    error: teams.error,
+                    error: team.error,
                 });
+
             }
             return res.send({
-                response: teams.response,
+                response: team.response,
             });
+
         }
         catch (error) {
             return res.send({
@@ -77,6 +85,7 @@ module.exports = {
     },
 
     getAllTeams: async (req, res) => {
+        console.log(("controler",req.query))
         try {
             // const validate = await paginationSchema.validateAsync(req.query);
             const teams = await teamService.getAllTeams(req.query);
@@ -159,6 +168,30 @@ module.exports = {
             error: error,
           });
         }},
+        getTeamByProjectId: async (req, res) => {
+            try {
+                console.log("check1",req.query)
+                const validate = await getTeamByProjectId.validateAsync(req.query);
+                console.log("check2", validate)
+    
+                const members = await teamService.getTeamByProjectId(validate);
+                // console.log("check3", members)
+                if (members.error) {
+                    return res.send({
+                        error: members.error,
+                    });
+    
+                }
+                return res.send({
+                    response: members.response,
+                });
+            }
+            catch (error) {
+                return res.send({
+                    error: error
+                });
+            };
+        },
         createTeamMembers: async (req, res) => {
             try {
                 const validate = await createTeamMembersSchema.validateAsync(req.body);
@@ -182,11 +215,9 @@ module.exports = {
 
         getAllMembers: async (req, res) => {
             try {
-    
-    
                 // const validate = await getMembersSchema.validateAsync(req.query);
                 const members = await teamService.getAllMembers(req.query);
-    console.log("query here                  ",req.query)
+                console.log("query here                  ", req.query)
                 if (members.error) {
                     return res.send({
                         error: members.error,
@@ -226,5 +257,25 @@ module.exports = {
                     error: error
                 });
             };
-        },    
+        },
+        getTeamMembers: async (req, res) => {
+            try {
+                const validate = await getByTeamIdSchema.validateAsync(req.query);
+                const members = await teamService.getTeamMembers(validate);
+                if (members.error) {
+                    return res.send({
+                        error: members.error,
+                    });
+    
+                }
+                return res.send({
+                    response: members.response,
+                });
+            }
+            catch (error) {
+                return res.send({
+                    error: error
+                });
+            };
+        }    
 }

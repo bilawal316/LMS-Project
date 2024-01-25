@@ -3,26 +3,86 @@ const { models } = require("./index");
 const { Op } = require("sequelize");
 
 module.exports = {
-    createTeam: async (body, teamsId) => {
+    // createTeam: async (body, teamsId) => {
+    //     try {
+    //         const teams = await models.Team.create({
+    //             teamsId,
+    //             ...body
+    //         })
+    //         return {
+    //             response: teams,
+    //         };
+
+
+    //     } catch (error) {
+    //         return {
+    //             error: error,
+    //         };
+    //     }
+
+    // },
+
+    createTeam: async (body, teamsId, membersArray) => {
         try {
+            console.log("ahm", body, teamsId, membersArray)
+
+            const iterations = 1;
+
+            // const project = await models.Projects.update(
+            //     {
+            //         projectTag: 'Assigned',
+            //         status: 'Pending'
+            //     },
+            //     {
+            //         where: {
+            //             projectId: body.projectId,
+            //         }
+            //     }
+            // );
+            // Create the team
+            console.log("teamleaderid",body.teamsLeaderId)
+
             const teams = await models.Team.create({
                 teamsId,
-                ...body
-            })
+                title:body.title,
+
+                teamsLeaderId: body.teamsLeaderId,
+                userId: body.userId,
+                projectId: body.projectId,
+                instructorId: body.instructorId
+            });
+            console.log("check1", teams)
+            // Update project status
+
+            // console.log("check2", project)
+
+            // Associate other members with the team
+            if (membersArray && membersArray.length > 0) {
+                const TeamMembers = await models.TeamMembers.bulkCreate(
+                    membersArray.map(member => ({
+                        teamsMemberId: member.teamsMemberId,
+                        teamId: teams.teamsId,
+                        userId: member.userId,
+                        // ... any other fields
+                    }))
+
+                );
+                console.log("check 3", TeamMembers)
+
+            }
             return {
                 response: teams,
             };
-
-
         } catch (error) {
+            // If there's an error, attempt to undo changes
+
             return {
                 error: error,
             };
         }
-
     },
     
-    getTeamById: async (teamLeader, projectId) => {
+    getTeamById: async (teamLeader) => {
         try {
             // Fetch user details from the Users table
             console.log("teamLeader", teamLeader)
@@ -33,19 +93,19 @@ module.exports = {
                 attributes: ['firstName', 'lastName']  // Specify the attributes you want from the Users table
             });
 
-            // Fetch project details from the Projects table
-            const project = await models.Projects.findOne({
-                where: {
-                    projectId: projectId
-                },
-                attributes: ['title']  // Specify the attributes you want from the Projects table
-            });
+            // // Fetch project details from the Projects table
+            // const project = await models.Projects.findOne({
+            //     where: {
+            //         projectId: projectId
+            //     },
+            //     attributes: ['projectTitle']  // Specify the attributes you want from the Projects table
+            // });
 
-console.log("check",user,project)
+console.log("check",user)
             return {
                 response: {
                     userName: user ? user.firstName + " " + user.lastName : null,
-                    projectTitle: project ? project.title : null
+                    // projectTitle: project ? project.projectTitle : null
                 }
             };
 
@@ -78,22 +138,19 @@ console.log("check",user,project)
     
     getAllTeams: async (query) => {
         try {
-            console.log("model", query)
+            // console.log("model", offset, query)
             const teams = await models.Team.findAll({
                 // attributes : ["firstName", "lastName", "role", "email"]
                 attributes: {
                     exclude: ["createdAt", "updatedAt", "deletedAt"],
                 },
                 where: {
-                    instructorId: query
+                    instructorId: query.instructorId
                 }
             })
-            console.log("check", teams)
             return {
                 response: teams,
             };
-
-
         } catch (error) {
             return {
                 error: error,
@@ -213,22 +270,43 @@ console.log("check",user,project)
         }
     },
 
-    getTeamMemberById: async (teamsMemberId) => {
+    getMemberById: async (teammembers) => {
         try {
-            const teamsMember = await models.Team.findOne({
-                where: {
-                    teamsMemberId: teamsMemberId,
+            let memberDetails = [];
+            console.log("teammebers", teammembers.response.length)
+            // Assuming teammembers.response is an array of objects
+
+            for (let i = 0; i < teammembers.response.length; i++) {
+                console.log(teammembers.response[i].dataValues.userId)
+                // console.log("mmm", member);
+
+                const userDetails = await models.Users.findOne({
+                    where: {
+                        userId: teammembers.response[i].dataValues.userId
+                    },
+                    attributes: ['firstName', 'lastName']
+                });
+                if (userDetails) {
+                    console.log(userDetails.firstName)
+                    memberDetails.push({
+                        userId: teammembers.response[i].dataValues.userId,
+                        firstName: userDetails.firstName,
+                        lastName: userDetails.lastName
+                    });
                 }
-            })
+
+            }
+
+
             return {
-                response: teamsMember,
+                response: memberDetails
             };
+
         } catch (error) {
             return {
                 error: error,
             };
         }
-
     },
 
     getAllMembers: async (query) => {
@@ -255,9 +333,9 @@ console.log("check",user,project)
             // Step 3: Fetch all userIds from the teamMembers table
             const teamMembers = await models.TeamMembers.findAll({
                 where: {
-                    UserId: userIds
+                    userId: userIds
                 },
-                attributes: ['UserId']
+                attributes: ['userId']
             });
 
             // Step 4: Extract all userIds from the teamMembers
@@ -305,5 +383,91 @@ console.log("check",user,project)
             };
         }
 
+    },
+getTeamByProjectId: async (query) => {
+        try {
+            console.log(query);
+
+            const Projects = await models.Projects.findOne({
+                where: {
+                    projectId: query.projectId
+                },
+                attributes: ['teamId']
+            });
+        
+
+            console.log("teams response", Projects.dataValues.teamId);
+
+            const teamMembers = await models.TeamMembers.findAll({
+                where: {
+                    teamId: Projects.dataValues.teamId
+                },
+                attributes: ['teamsMemberId', 'userId']
+            });
+
+            const userResponses = [];
+
+            for (let i = 0; i < teamMembers.length; i++) {
+                console.log(teamMembers[i].dataValues.userId);
+
+                const userMembers = await models.Users.findOne({
+                    where: {
+                        userId: teamMembers[i].dataValues.userId
+                    },
+                    attributes: ['firstName', 'lastName']
+                });
+
+                userResponses.push({
+                    teamMemberId: teamMembers[i].dataValues.teamsMemberId,
+                    firstName: userMembers.dataValues.firstName,
+                    lastName: userMembers.dataValues.lastName
+                });
+
+                console.log(userMembers);
+            }
+
+            // Assuming you are using Express.js
+
+
+
+            // memberDetails.push({
+            //     userId: teammembers.response[i].dataValues.userId,
+            //     firstName: userDetails.firstName,
+            //     lastName: userDetails.lastName
+            // });
+
+
+
+
+
+            return {
+                response: userResponses
+            };
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+    },
+    getTeamMembers: async (query) => {
+        try {
+
+            const teamMembers = await models.TeamMembers.findAll({
+                where: {
+                    teamId: query.teamsId
+                },
+                attributes: ['userId', 'teamsMemberId']
+            });
+            console.log("model", teamMembers)
+            return {
+                response: teamMembers,
+            };
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
     },
 };

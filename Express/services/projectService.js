@@ -28,10 +28,10 @@ module.exports = {
             };
         }
     },
-    getAllProjects: async () => {
+    getAllProjects: async (query) => {
         try {
             // const offset = (query.pageNo - 1) * query.limit; (offset, query)
-            const projects = await projectModel.getAllProjects();
+            const projects = await projectModel.getAllProjects(query.instructorId);
             if (projects.error) {
                 return {
                     error: projects.error,
@@ -45,7 +45,26 @@ module.exports = {
             };
         }
     },
+    getInsProjects: async (query) => {
+        try {
 
+            const projects = await projectModel.getInsProjects(query);
+            if (projects.error) {
+                return {
+                    error: projects.error,
+                }
+            } return {
+                response: projects.response,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    },
     deleteUser: async (query) => {
         try {
 
@@ -142,4 +161,25 @@ module.exports = {
           };
         }
       },
+      getInsProjects: async (query) => {
+        try {
+
+            const projects = await projectModel.getInsProjects(query);
+            if (projects.error) {
+                return {
+                    error: projects.error,
+                }
+            } return {
+                response: projects.response,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    },
+
 };

@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
+import { Fragment, useState } from 'react';
+import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
+import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import axios from 'axios';
+import Cookie from "universal-cookie";
+import { Navigate, useNavigate } from 'react-router-dom';
 
-import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, CalendarIcon, ChartPieIcon, Cog6ToothIcon, DocumentDuplicateIcon, FolderIcon, HomeIcon, UsersIcon, XMarkIcon } from '@heroicons/react/24/outline'
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -22,6 +26,38 @@ const teams = [
 ]
 export default function Navbar(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const cookie = new Cookie();
+  const  navigate=useNavigate()
+
+  const getUserIdFromCookie = () => {
+    const authCookie = cookie.get('auth');
+    if (authCookie && authCookie.userId) {
+      return authCookie.userId;
+    }
+    return null;
+  };
+
+
+  const handleLogout = async () => {
+    try {
+      const instructorId = getUserIdFromCookie(); // Fix the typo here
+      // Call the backend logout API
+      await axios.post('http://localhost:3000/auth/logout', {
+        instructorId: instructorId, // Use the correct variable name
+        // Add any other necessary data for the logout
+      });
+  
+      // Delete cookies on the frontend
+      document.cookie = 'auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  
+      // Redirect to the desired page after logout
+      navigate("/"); // Assuming navigate is imported from your router library
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Handle errors if needed
+    }
+  };
+
   return (
     <Disclosure as="nav" className="bg-[#efebea]">
       {/* {({ open }) => ( */}
@@ -82,25 +118,37 @@ export default function Navbar(props) {
                         <ul role="list" className="flex flex-1 flex-col gap-y-7">
                           <li>
                             <ul role="list" className="-mx-2 space-y-1">
-                              {navigation.map((item) => (
-                                <li key={item.name}>
-                                  <a
-                                    href={item.href}
-                                    onClick={() => {
-                                      void props.updateState(item.name.toUpperCase());
-                                    }}
-                                    className={classNames(
-                                      item.current
-                                        ? 'bg-purple-700 hover: text-white'
-                                        : 'text-purple-700 hover:text-white hover:bg-purple-700',
-                                      'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                    )}
-                                  >
-                                    <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
-                                    {item.name}
-                                  </a>
-                                </li>
-                              ))}
+                            {navigation.map((item) => (
+            <li key={item.name}>
+              <a
+                href={item.href}
+                onClick={() => {
+                  if (item.name === 'Dashboard') {
+                    void props.updateState("HOME");
+                  } else if (item.name === 'Trainees') {
+                    void props.updateState("TRAINEES");
+                  } else if (item.name === 'Projects') {
+                    void props.updateState("PROJECTS");
+                  } else if (item.name === 'Tasks') {
+                    void props.updateState("TASKS");
+                  } else if (item.name === 'Teams') {
+                    void props.updateState("TEAMS");
+                  } else if (item.name === 'Reports') {
+                    void props.updateState("REPORTS");
+                  }
+                }}
+                className={classNames(
+                  item.current
+                    ? 'bg-purple-700 hover:text-white'
+                    : 'text-purple-700 hover:text-white hover:bg-purple-700',
+                  'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                )}
+              >
+                <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                {item.name}
+              </a>
+            </li>
+          ))}
                             </ul>
                           </li>
                           <li>
@@ -195,16 +243,19 @@ export default function Navbar(props) {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          onClick={() => {
+                            void props.updateState("PROFILE");
+                          }}
+                          className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                        >
+                          Your Profile
+                        </a>
+                      )}
+                    </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
                           <a
@@ -218,9 +269,10 @@ export default function Navbar(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
-                            className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
+                          href="#"
+                          onClick={handleLogout}
+                          className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                        >
                             Sign out
                           </a>
                         )}

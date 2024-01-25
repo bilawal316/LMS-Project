@@ -236,7 +236,7 @@ const Trainee = () => {
                         <h2 className="mb-4 text-2xl font-semibold leadi text-purple-500">Trainee List</h2>
                         <div className="overflow-x-auto w-full bg-white ">
                             <table className="w-full text-sm border-collapse">
-                                <thead className="bg-yellow-200">
+                                <thead className="bg-purple-700 text-white">
                                     <tr className="text-left">
                                         <th className="p-3 border border-gray-300">Name</th>
                                         <th className="p-3 border border-gray-300">Email</th>
@@ -266,7 +266,7 @@ const Trainee = () => {
 
                                             <td className="p-3 border border-gray-300">
 
-                                                <span className="px-3 py-2 text-white rounded-md bg-indigo-500 cursor-pointer" onClick={() => handleEditClick(trainee)}>                                                <span>Edit</span>
+                                                <span className="px-3 py-2 text-white rounded-md bg-purple-700 cursor-pointer" onClick={() => handleEditClick(trainee)}>                                                <span>Edit</span>
 
                                                 </span>  <span
                                                     className="px-3 py-2 text-white rounded-md bg-red-500 cursor-pointer"

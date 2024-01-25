@@ -20,11 +20,11 @@ module.exports = {
         }
 
     },
-    getProjectById: async (projectsId) => {
+    getProjectById: async (instructorId) => {
         try {
             const project = await models.Projects.findOne({
                 where: {
-                    projectsId: projectsId,
+                    instructorId: instructorId,
                 }
             })
             return {
@@ -39,10 +39,38 @@ module.exports = {
         }
 
     },
-    getAllProjects: async () => {
+    getInsProjects: async (query) => {
+        try {
+
+            const projects = await models.Projects.findAll({
+                // attributes : ["firstName", "lastName", "role", "email"]
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+                where: {
+                    instructorId: query.instructorId,
+                    projectTag:query.projectTag
+                }
+            })
+            return {
+                response: projects,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    },
+    getAllProjects: async (instructorId) => {
         try {
             const projects = await models.Projects.findAll({
                 // attributes : ["firstName", "lastName", "role", "email"]
+                where: {
+                    instructorId: instructorId  ,
+                },
                 attributes: {
                     exclude: ["createdAt", "updatedAt", "deletedAt"],
                 },
@@ -164,4 +192,29 @@ module.exports = {
           };
         }
       },
+      getInsProjects: async (query) => {
+        try {
+
+            const projects = await models.Projects.findAll({
+                // attributes : ["firstName", "lastName", "role", "email"]
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"],
+                },
+                where: {
+                    instructorId: query.instructorId,
+                }
+            })
+            return {
+                response: projects,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    },
+
 };

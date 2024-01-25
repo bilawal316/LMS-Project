@@ -1,21 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
+import Cookie from "universal-cookie";
 
 const ProjectDeadline = () => {
+  const cookie = new Cookie();
   const [Projects, setProjects] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 4;
 
+  const getUserIdFromCookie = () => {
+    const authCookie = cookie.get('auth');
+    if (authCookie && authCookie.userId) {
+      return authCookie.userId;
+    }
+    return null;
+  };
+
   const getAllProjects = async () => {
+    const userId = getUserIdFromCookie();
     try {
-      const { data } = await axios.get("http://localhost:3000/project/getAllProjects", {});
+      const { data } = await axios.get("http://localhost:3000/project/getAllProjects", {
+        params: {
+                instructorId: userId,
+                }
+
+      });
       console.log(data);
       if (data.response) {
         const formattedProjects = data.response.map(item => ({
           projectId: item.projectId,
-          title: item.title,
+          projectTitle: item.projectTitle,
           deadlineDate: item.deadlineDate,
         }));
         setProjects(formattedProjects);
@@ -51,7 +67,7 @@ const ProjectDeadline = () => {
             {currentProjects.map((project, index) => (
               <tr key={index} className="border-b border-opacity-20 border-gray-700 bg-white">
                 <td className="p-3 border border-gray-300">
-                  <p>{project.title}</p>
+                  <p>{project.projectTitle}</p>
                 </td>
                 <td className="p-3 border border-gray-300">
                   <p>{project.deadlineDate}</p>

@@ -6,25 +6,42 @@ const { v4: uuidv4 } = require("uuid");
 module.exports = {
     createTeam: async (body) => {
         try {
-            const teamsId = uuidv4();
-            const team = await teamModel.createTeam(body, teamsId);
+
+            console.log("Service method started execution",body);
+
+            const teamId = uuidv4();
+            const membersArray = [];
+
+            // Loop through the userIds array and create the members
+            for (let userId of body.userId) {
+                console.log("no error")
+                const member = {
+                    userId: userId,
+                    teamsMemberId: uuidv4(),
+                };
+                membersArray.push(member);
+            }
+
+            console.log("Members Array:", membersArray);
+            const team = await teamModel.createTeam(body, teamId, membersArray);
 
             if (team.error) {
                 return {
                     error: team.error,
                 }
             }
+
             return {
                 response: team.response,
-            }
+            };
 
-        }
-        catch (error) {
+        } catch (error) {
             return {
                 error: error,
             };
         }
     },
+
     
     createTeamMembers: async (body) => {
         try {
@@ -48,46 +65,55 @@ module.exports = {
     },
     getAllTeams: async (query) => {
         try {
-            const teams = await teamModel.getAllTeams(query.instructorId);
-
+            const teams = await teamModel.getAllTeams(query);
+            console.log("teams", teams);
+    
             if (teams.error) {
                 return {
                     error: teams.error,
-                }
+                };
             }
-
+    
             const teamResponses = [];
-console.log("length",teams.response.length)
+    
             for (let i = 0; i < teams.response.length; i++) {
-                console.log("response team",teams.response[i].team)
-                const teamLeader = teams.response[i].dataValues.teamsLeaderId;
-                const projectId = teams.response[i].dataValues.projectId;
+                const teamId = teams.response[i].dataValues.teamsId;
                 const teamTitle = teams.response[i].dataValues.title;
-                const teamsId = teams.response[i].dataValues.teamsId;
-
-console.log("service leader",teamLeader)
-                const isTeam = await teamModel.getTeamById(teamLeader, projectId);
-// console.log("isTeam",isTeam.response)
+                const teamLeader = teams.response[i].dataValues.teamsLeaderId;
+                // const projectId = teams.response[i].dataValues.projectId;
+    
+                console.log("teamId", teamId);
+                console.log("teamtitle", teamTitle);
+                console.log("teamLeader", teamLeader);
+                // console.log("projectId", projectId);
+    
+                const isTeam = await teamModel.getTeamById(teamLeader);
+                console.log("isTeam", isTeam);
+    
                 if (!isTeam.response || isTeam.error) {
+                    console.log("Skipping team:", teamId);
                     continue; // Skip this team and move to the next one
                 }
-
+    
                 // Extract the required information from the response
                 const teamInfo = {
-                   leaderName: isTeam.response.userName, // Assuming 'name' is the property name in the response
-                    projectTitle: isTeam.response.projectTitle ,
-                    title:teamTitle,
-                    teamId:teamsId// Assuming 'projectName' is the property name in the response
+                    teamId: teamId,
+                    teamTitle: teamTitle,
+                    leaderName: isTeam.response.userName, // Assuming 'userName' is the property name in the response
+                    // projectTitle: isTeam.response.projectTitle // Assuming 'projectTitle' is the property name in the response
                 };
-
+    
+                console.log("teamInfo", teamInfo);
+    
                 teamResponses.push(teamInfo);
             }
-
+    
             return {
                 response: teamResponses,
             };
-
+    
         } catch (error) {
+            console.error("Error:", error);
             return {
                 error: error,
             };
@@ -245,4 +271,49 @@ console.log("service leader",teamLeader)
             };
         }
     },
+    getTeamByProjectId: async (query) => {
+        try {
+
+            // const teamMembers = await teamModel.getTeamMembers(query);
+            const MembersName = await teamModel.getTeamByProjectId(query);
+            if (MembersName.error) {
+                return {
+                    error: MembersName.error,
+                }
+
+            } return {
+                response: MembersName.response,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    },
+    getTeamMembers: async (query) => {
+        try {
+
+            const teamMembers = await teamModel.getTeamMembers(query);
+        const MembersName=await teamModel.getMemberById(teamMembers);
+            if (MembersName.error) {
+                return {
+                    error: MembersName.error,
+                }
+
+            } return {
+                response: MembersName.response,
+            };
+
+
+        } catch (error) {
+            return {
+                error: error,
+            };
+        }
+
+    }
+    
 };

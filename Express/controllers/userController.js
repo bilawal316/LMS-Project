@@ -10,11 +10,17 @@ const createUserSchema = joi.object().keys({
   password: joi.string().required().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   confirmPassword: joi.ref("password"),
   role: joi.string().valid("instructor", "trainee", "admin"),
+  cohort: joi.string().required().min(3).max(40),
 });
 
 const getByUserIdSchema = joi.object().keys({
   userId: joi.string().required(),
-})
+});
+
+const updateProfilePictureSchema = joi.object().keys({
+  userId: joi.string().required(),
+  // Add validation for the profile picture here if needed
+});
 
 const updateUserSchema = joi.object().keys({
   userId: joi.string().required(),
@@ -74,6 +80,7 @@ module.exports = {
         });
     };
 },
+
 getAllUsers: async (req, res) => {
     try {
 
