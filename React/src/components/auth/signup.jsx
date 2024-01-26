@@ -9,6 +9,7 @@ function Signup(updateState) {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [role, setRole] = useState("");
+    const [signupSuccess, setSignupSuccess] = useState(false);
     
     const Signup = async (e) => {
         e.preventDefault();
@@ -26,10 +27,42 @@ function Signup(updateState) {
           }
         )
         if (data.error) {
-            return alert("invalid credentials")
+                if (data.error.includes("Email already exists")) {
+                    return alert("Email already registered. Please use a different email.");
+                } else {
+                    return alert("Invalid credentials");
+                }
+            }
+
+            alert("Successfully Signed up");
+            setSignupSuccess(true);
+        } catch (error) {
+            console.error("Error during signup:", error);
+            alert("An error occurred during signup. Please try again.");
         }
-        return alert("Sucessfully Signed up")
     }
+
+useEffect(() => {
+        if (signupSuccess) {
+            setFirstName("");
+            setLastName("");
+            setEmail("");
+            setPassword("");
+            setConfirmPassword("");
+            setRole("");
+        }
+    }, [signupSuccess]);
+
+    // Conditional rendering for redirection
+    if (signupSuccess) {
+        // You can replace this with your own logic for redirection
+        return (
+            <div>
+                <p>Redirecting to sign-in page...</p>
+                {/* Add your redirection logic here, e.g., setTimeout(() => window.location.href = '/signin', 2000) */}
+            </div>
+        );
+    };
   return (
     <div>
         <div className="flex">
